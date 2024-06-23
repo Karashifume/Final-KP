@@ -1,7 +1,7 @@
 import 'package:homecareapp/components/button.dart';
 import 'package:homecareapp/main.dart';
 import 'package:homecareapp/models/auth_model.dart';
-// import 'package:homecareapp/providers/dio_provider.dart';
+import 'package:homecareapp/providers/dio_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -87,24 +87,24 @@ class _SignUpFormState extends State<SignUpForm> {
                 width: double.infinity,
                 title: 'Sign Up',
                 onPressed: () async {
-                  // final userRegistration = await DioProvider().registerUser(
-                  //     _nameController.text,
-                  //     _emailController.text,
-                  //     _passController.text);
+                  final userRegistration = await DioProvider().registerUser(
+                      _nameController.text,
+                      _emailController.text,
+                      _passController.text);
 
-                  // //if register success, proceed to login
-                  // if (userRegistration) {
-                  //   final token = await DioProvider()
-                  //       .getToken(_emailController.text, _passController.text);
+                  //if register success, proceed to login
+                  if (userRegistration) {
+                    final token = await DioProvider()
+                        .getToken(_emailController.text, _passController.text);
 
-                  //   if (token) {
-                  //     auth.loginSuccess({}, {}); //update login status
+                    if (token) {
+                      auth.loginSuccess({}, {}); //update login status
                       //rediret to main page
                       MyApp.navigatorKey.currentState!.pushNamed('main');
-                  //   }
-                  // } else {
-                  //   print('register not successful');
-                  // }
+                    }
+                  } else {
+                    print('register not successful');
+                  }
                 },
                 disable: false,
               );

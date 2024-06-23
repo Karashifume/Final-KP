@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 class DoctorCard extends StatelessWidget {
   const DoctorCard({
     Key? key,
-    // required this.doctor,
-    // required this.isFav,
+    required this.doctor,
+    required this.isFav,
   }) : super(key: key);
 
-  // final Map<String, dynamic> doctor;
-  // final bool isFav;
+  final Map<String, dynamic> doctor;
+  final bool isFav;
 
   @override
   Widget build(BuildContext context) {
@@ -28,38 +28,35 @@ class DoctorCard extends StatelessWidget {
               SizedBox(
                 width: Config.widthSize * 0.33,
                 child: Image.network(
-                  'assets/doctor_2.jpg',
-                  // "http://127.0.0.1:8000${doctor['doctor_profile']}",
+                  "http://127.0.0.1:8000${doctor['doctor_profile']}",
                   fit: BoxFit.fill,
                 ),
               ),
-              const Flexible(
+              Flexible(
                 child: Padding(
                   padding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Dr Richard",
-                        // "Dr ${doctor['doctor_name']}",
-                        style: TextStyle(
+                        "Dr ${doctor['doctor_name']}",
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        'Dental',
-                        // "${doctor['category']}",
-                        style: TextStyle(
+                        "${doctor['category']}",
+                        style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
+                        children: const <Widget>[
                           Icon(
                             Icons.star_border,
                             color: Colors.yellow,
@@ -89,14 +86,14 @@ class DoctorCard extends StatelessWidget {
             ],
           ),
         ),
-        // onTap: () {
-        //   //pass the details to detail page
-        //   MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
-        //       builder: (_) => DoctorDetails(
-        //             doctor: doctor,
-        //             isFav: isFav,
-        //           )));
-        // },
+        onTap: () {
+          //pass the details to detail page
+          MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
+              builder: (_) => DoctorDetails(
+                    doctor: doctor,
+                    isFav: isFav,
+                  )));
+        },
       ),
     );
   }

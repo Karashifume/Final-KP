@@ -3,7 +3,7 @@ import "package:homecareapp/utils/config.dart";
 import "package:flutter/material.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
-// import "../providers/dio_provider.dart";
+import "../providers/dio_provider.dart";
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -143,24 +143,24 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPressed: () async {
                                 final SharedPreferences prefs =
                                     await SharedPreferences.getInstance();
-                                // final token = prefs.getString('token') ?? '';
+                                final token = prefs.getString('token') ?? '';
 
-                                // // if (token.isNotEmpty && token != '') {
-                                // //   //logout here
-                                // //   final response =
-                                // //       await DioProvider().logout(token);
+                                if (token.isNotEmpty && token != '') {
+                                  //logout here
+                                  final response =
+                                      await DioProvider().logout(token);
 
-                                // //   if (response == 200) {
-                                // //     //if successfully delete access token
-                                // //     //then delete token saved at Shared Preference as well
-                                // //     await prefs.remove('token');
-                                // //     setState(() {
-                                // //       //redirect to login page
-                                // //       MyApp.navigatorKey.currentState!
-                                // //           .pushReplacementNamed('/');
-                                // //     });
-                                // //   }
-                                // // }
+                                  if (response == 200) {
+                                    //if successfully delete access token
+                                    //then delete token saved at Shared Preference as well
+                                    await prefs.remove('token');
+                                    setState(() {
+                                      //redirect to login page
+                                      MyApp.navigatorKey.currentState!
+                                          .pushReplacementNamed('/');
+                                    });
+                                  }
+                                }
                               },
                               child: const Text(
                                 "Logout",

@@ -79,43 +79,41 @@ class _LoginFormState extends State<LoginForm> {
                   //login here
                   final token = await DioProvider()
                       .getToken(_emailController.text, _passController.text);
-                   
-                  final user = await DioProvider().getUser(token);
-                  print(user);
-                  // if (token) {
-                    // auth.loginSuccess(); //update login status
-                  //   //rediret to main page
 
-                  //   //grab user data here
-                  //   final SharedPreferences prefs =
-                  //       await SharedPreferences.getInstance();
-                  //   final tokenValue = prefs.getString('token') ?? '';
+                  if (token) {
+                    //auth.loginSuccess(); //update login status
+                    //rediret to main page
 
-                  //   if (tokenValue.isNotEmpty && tokenValue != '') {
-                  //     //get user data
-                  //     final response = await DioProvider().getUser(tokenValue);
-                  //     if (response != null) {
-                  //       setState(() {
-                  //         //json decode
-                  //         Map<String, dynamic> appointment = {};
-                  //         final user = json.decode(response);
+                    //grab user data here
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    final tokenValue = prefs.getString('token') ?? '';
 
-                  //         //check if any appointment today
-                  //         for (var doctorData in user['doctor']) {
-                  //           //if there is appointment return for today
+                    if (tokenValue.isNotEmpty && tokenValue != '') {
+                      //get user data
+                      final response = await DioProvider().getUser(tokenValue);
+                      if (response != null) {
+                        setState(() {
+                          //json decode
+                          Map<String, dynamic> appointment = {};
+                          final user = json.decode(response);
 
-                  //           if (doctorData['appointments'] != null) {
-                  //             appointment = doctorData;
-                  //           }
-                  //         }
+                          //check if any appointment today
+                          for (var doctorData in user['doctor']) {
+                            //if there is appointment return for today
 
-                          // auth.loginSuccess(user, appointment);
+                            if (doctorData['appointments'] != null) {
+                              appointment = doctorData;
+                            }
+                          }
+
+                          auth.loginSuccess(user, appointment);
                           MyApp.navigatorKey.currentState!.pushNamed('main');
-                  //       });
-                  //     }
-                  //   }
-                  },
-                // },
+                        });
+                      }
+                    }
+                  }
+                },
                 disable: false,
               );
             },

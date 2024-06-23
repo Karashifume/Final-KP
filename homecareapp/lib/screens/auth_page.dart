@@ -1,7 +1,9 @@
 import 'package:homecareapp/components/login_form.dart';
 import 'package:homecareapp/components/sign_up_form.dart';
+import 'package:homecareapp/components/social_button.dart';
 import 'package:homecareapp/utils/text.dart';
 import 'package:flutter/material.dart';
+
 import '../utils/config.dart';
 
 class AuthPage extends StatefulWidget {
@@ -16,6 +18,7 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     Config().init(context);
+    //build login text field
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.symmetric(
@@ -74,6 +77,13 @@ class _AuthPageState extends State<AuthPage> {
               ),
             ),
             Config.spaceSmall,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: const <Widget>[
+                SocialButton(social: 'google'),
+                SocialButton(social: 'facebook'),
+              ],
+            ),
             Config.spaceSmall,
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

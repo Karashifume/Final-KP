@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:homecareapp/main_layout.dart';
 import 'package:homecareapp/models/auth_model.dart';
 import 'package:homecareapp/screens/auth_page.dart';
 import 'package:homecareapp/screens/booking_page.dart';
 import 'package:homecareapp/screens/success_booked.dart';
-import 'package:homecareapp/screens/doctor_details.dart';
 import 'package:homecareapp/utils/config.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -53,7 +52,6 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => const AuthPage(),
           'main': (context) => const MainLayout(),
-          'doc_detail': (context) => const DoctorDetails(),
           'booking_page': (context) => BookingPage(),
           'success_booking': (context) => const AppointmentBooked(),
         },

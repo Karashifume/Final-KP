@@ -13,7 +13,7 @@ class DioProvider {
       if (response.statusCode == 200 && response.data != '') {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', response.data);
-        return response.data;
+        return true;
       } else {
         return false;
       }

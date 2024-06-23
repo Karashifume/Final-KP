@@ -2,7 +2,7 @@ import 'package:homecareapp/components/button.dart';
 import 'package:homecareapp/components/custom_appbar.dart';
 import 'package:homecareapp/main.dart';
 import 'package:homecareapp/models/booking_datetime_converted.dart';
-// import 'package:homecareapp/providers/dio_provider.dart';
+import 'package:homecareapp/providers/dio_provider.dart';
 import 'package:homecareapp/utils/config.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -41,7 +41,7 @@ class _BookingPageState extends State<BookingPage> {
   @override
   Widget build(BuildContext context) {
     Config().init(context);
-    // final doctor = ModalRoute.of(context)!.settings.arguments as Map;
+    final doctor = ModalRoute.of(context)!.settings.arguments as Map;
     return Scaffold(
       appBar: CustomAppBar(
         appTitle: 'Appointment',
@@ -133,19 +133,19 @@ class _BookingPageState extends State<BookingPage> {
                 title: 'Make Appointment',
                 onPressed: () async {
                   //convert date/day/time into string first
-                  // final getDate = DateConverted.getDate(_currentDay);
-                  // final getDay = DateConverted.getDay(_currentDay.weekday);
-                  // final getTime = DateConverted.getTime(_currentIndex!);
+                  final getDate = DateConverted.getDate(_currentDay);
+                  final getDay = DateConverted.getDay(_currentDay.weekday);
+                  final getTime = DateConverted.getTime(_currentIndex!);
 
-                  // final booking = await DioProvider().bookAppointment(
-                  //     getDate, getDay, getTime, doctor['doctor_id'], token!);
+                  final booking = await DioProvider().bookAppointment(
+                      getDate, getDay, getTime, doctor['doctor_id'], token!);
 
                   //if booking return status code 200, then redirect to success booking page
 
-                  // if (booking == 200) {
+                  if (booking == 200) {
                     MyApp.navigatorKey.currentState!
                         .pushNamed('success_booking');
-                  // }
+                  }
                 },
                 disable: _timeSelected && _dateSelected ? false : true,
               ),
@@ -161,7 +161,7 @@ class _BookingPageState extends State<BookingPage> {
     return TableCalendar(
       focusedDay: _focusDay,
       firstDay: DateTime.now(),
-      lastDay: DateTime(2024, 12, 31),
+      lastDay: DateTime(3000, 12, 31),
       calendarFormat: _format,
       currentDay: _currentDay,
       rowHeight: 48,

@@ -1,18 +1,16 @@
 import 'package:homecareapp/main.dart';
-// import 'package:homecareapp/providers/dio_provider.dart';
+import 'package:homecareapp/providers/dio_provider.dart';
 import 'package:homecareapp/utils/config.dart';
 import 'package:flutter/material.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppointmentCard extends StatefulWidget {
-  AppointmentCard({Key? key}) : super(key: key);
+  AppointmentCard({Key? key, required this.doctor, required this.color})
+      : super(key: key);
 
-  // AppointmentCard({Key? key, required this.doctor, required this.color})
-  //     : super(key: key);
-
-  // final Map<String, dynamic> doctor;
-  // final Color color;
+  final Map<String, dynamic> doctor;
+  final Color color;
 
   @override
   State<AppointmentCard> createState() => _AppointmentCardState();
@@ -24,8 +22,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.green, 
-        //color: widget.color,
+        color: widget.color,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Material(
@@ -37,22 +34,27 @@ class _AppointmentCardState extends State<AppointmentCard> {
               //insert Row here
               Row(
                 children: [
-                  const CircleAvatar(
-                    backgroundImage: AssetImage('assets/doctor_1.jpg'), // Example image
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        "http://127.0.0.1:8000${widget.doctor['doctor_profile']}"), //insert doctor profile
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const <Widget>[
+                    children: <Widget>[
                       Text(
-                        'Dr Richard',
-                        style: TextStyle(color: Colors.white),
+                        'Dr ${widget.doctor['doctor_name']}',
+                        style: const TextStyle(color: Colors.white),
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(
+                        height: 2,
+                      ),
                       Text(
-                        'Dental',
-                        style: TextStyle(color: Colors.black),
+                        widget.doctor['category'],
+                        style: const TextStyle(color: Colors.black),
                       )
                     ],
                   ),
@@ -61,7 +63,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
               Config.spaceSmall,
               //Schedule info here
               ScheduleCard(
-                // appointment: widget.doctor['appointments'],
+                appointment: widget.doctor['appointments'],
               ),
               Config.spaceSmall,
               //action button
@@ -115,26 +117,26 @@ class _AppointmentCardState extends State<AppointmentCard> {
                                   submitButtonText: 'Submit',
                                   commentHint: 'Your Reviews',
                                   onSubmitted: (response) async {
-                                    // final SharedPreferences prefs =
-                                    //     await SharedPreferences.getInstance();
-                                    // final token =
-                                    //     prefs.getString('token') ?? '';
+                                    final SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    final token =
+                                        prefs.getString('token') ?? '';
 
-                                    // final rating = await DioProvider()
-                                    //     .storeReviews(
-                                    //         response.comment,
-                                    //         response.rating,
-                                    //         widget.doctor['appointments']
-                                    //             ['id'], //this is appointment id
-                                    //         widget.doctor[
-                                    //             'doc_id'], //this is doctor id
-                                    //         token);
+                                    final rating = await DioProvider()
+                                        .storeReviews(
+                                            response.comment,
+                                            response.rating,
+                                            widget.doctor['appointments']
+                                                ['id'], //this is appointment id
+                                            widget.doctor[
+                                                'doc_id'], //this is doctor id
+                                            token);
 
                                     //if successful, then refresh
-                                    // if (rating == 200 && rating != '') {
+                                    if (rating == 200 && rating != '') {
                                       MyApp.navigatorKey.currentState!
                                           .pushNamed('main');
-                                    // }
+                                    }
                                   });
                             });
                       },
@@ -156,9 +158,8 @@ class _AppointmentCardState extends State<AppointmentCard> {
 
 //Schedule Widget
 class ScheduleCard extends StatelessWidget {
-  const ScheduleCard({Key? key}) : super(key: key);
-  // const ScheduleCard({Key? key, required this.appointment}) : super(key: key);
-  // final Map<String, dynamic> appointment;
+  const ScheduleCard({Key? key, required this.appointment}) : super(key: key);
+  final Map<String, dynamic> appointment;
 
   @override
   Widget build(BuildContext context) {
@@ -169,38 +170,36 @@ class ScheduleCard extends StatelessWidget {
       ),
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      child: const Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Icon(
+          const Icon(
             Icons.calendar_today,
             color: Colors.white,
             size: 15,
           ),
-          SizedBox(
+          const SizedBox(
             width: 5,
           ),
           Text(
-            'Monday , 11/28/2022',
-            // '${appointment['day']}, ${appointment['date']}',
-            style: TextStyle(color: Colors.white),
+            '${appointment['day']}, ${appointment['date']}',
+            style: const TextStyle(color: Colors.white),
           ),
-          SizedBox(
+          const SizedBox(
             width: 20,
           ),
-          Icon(
+          const Icon(
             Icons.access_alarm,
             color: Colors.white,
             size: 17,
           ),
-          SizedBox(
+          const SizedBox(
             width: 5,
           ),
           Flexible(
               child: Text(
-                '2:00PM',
-            // appointment['time'],
-            style: TextStyle(color: Colors.white),
+            appointment['time'],
+            style: const TextStyle(color: Colors.white),
           ))
         ],
       ),

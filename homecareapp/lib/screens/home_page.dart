@@ -50,15 +50,14 @@ class _HomePageState extends State<HomePage> {
     user = Provider.of<AuthModel>(context, listen: false).getUser;
     doctor = Provider.of<AuthModel>(context, listen: false).getAppointment;
     favList = Provider.of<AuthModel>(context, listen: false).getFav;
-  
+
     return Scaffold(
-      body: 
       //if user is empty, then return progress indicator
-      // user.isEmpty? 
-      // const Center(
-      //         child: CircularProgressIndicator(),
-      //       ): 
-            Padding(
+      body: user.isEmpty
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 15,
                 vertical: 15,
@@ -69,7 +68,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                     Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
@@ -143,30 +142,30 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Config.spaceSmall,
-                      // doctor.isNotEmpty? 
-                          AppointmentCard(
-                              // doctor: doctor,
-                              // color: Config.primaryColor,
+                      doctor.isNotEmpty
+                          ? AppointmentCard(
+                              doctor: doctor,
+                              color: Config.primaryColor,
+                            )
+                          : Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: Text(
+                                    'No Appointment Today',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
-                          //  Container(
-                          //     width: double.infinity,
-                          //     decoration: BoxDecoration(
-                          //       color: Colors.grey.shade300,
-                          //       borderRadius: BorderRadius.circular(10),
-                          //     ),
-                          //     child: const Center(
-                          //       child: Padding(
-                          //         padding: EdgeInsets.all(20),
-                          //         child: Text(
-                          //           'No Appointment Today',
-                          //           style: TextStyle(
-                          //             fontSize: 16,
-                          //             fontWeight: FontWeight.w600,
-                          //           ),
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
                       Config.spaceSmall,
                       const Text(
                         'Top Doctors',
@@ -176,31 +175,15 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Config.spaceSmall,
-                      // Column(
-                      //    children: List.generate(10, (index) {
-                      //   // children: List.generate(user['doctor'].length, (index) {
-                      //     return DoctorCard(
-                      //       // doctor: user['doctor'][index],
-                      //       // //if lates fav list contains particular doctor id, then show fav icon
-                      //       // isFav: favList
-                      //       //         .contains(user['doctor'][index]['doc_id'])
-                      //       //     ? true
-                      //       //     : false,
-                      //     );
-                      //   }),
-                      // ),
                       Column(
-                        children: List.generate(10, (index) {
-                          return GestureDetector(
-                            onTap: () {
-                              // This is where we handle the tap and navigate to the DoctorDetails page
-                              Navigator.pushNamed(context, 'doc_detail');
-                            },
-                            child: DoctorCard(
-                              // Assuming you might want to pass some details to the DoctorCard
-                              // You might need to modify DoctorCard to accept parameters if necessary
-                              // doctor: doctors[index], // Assuming you have a list of doctor data
-                            ),
+                        children: List.generate(user['doctor'].length, (index) {
+                          return DoctorCard(
+                            doctor: user['doctor'][index],
+                            //if lates fav list contains particular doctor id, then show fav icon
+                            isFav: favList
+                                    .contains(user['doctor'][index]['doc_id'])
+                                ? true
+                                : false,
                           );
                         }),
                       ),

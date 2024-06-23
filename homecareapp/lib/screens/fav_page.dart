@@ -37,9 +37,9 @@ class _FavPageState extends State<FavPage> {
                     itemCount: auth.getFavDoc.length,
                     itemBuilder: (context, index) {
                       return DoctorCard(
-                        // doctor: auth.getFavDoc[index],
-                        // //show fav icon
-                        // isFav: true,
+                        doctor: auth.getFavDoc[index],
+                        //show fav icon
+                        isFav: true,
                       );
                     },
                   );
