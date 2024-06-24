@@ -15,9 +15,11 @@ class DioProvider {
         await prefs.setString('token', response.data);
         return true;
       } else {
+        print('getToken False');
         return false;
       }
     } catch (error) {
+       print('getToken Error');
       return error;
     }
   }
@@ -30,7 +32,12 @@ class DioProvider {
       if (user.statusCode == 200 && user.data != '') {
         return json.encode(user.data);
       }
+      else {
+        print('getUser False');
+        return false;
+      }
     } catch (error) {
+      print('getUser Error');
       return error;
     }
   }
@@ -62,7 +69,7 @@ class DioProvider {
       if (response.statusCode == 200 && response.data != '') {
         return response.statusCode;
       } else {
-        return 'Error';
+        return 'Error BookAppointment';
       }
     } catch (error) {
       return error;
@@ -78,7 +85,7 @@ class DioProvider {
       if (response.statusCode == 200 && response.data != '') {
         return json.encode(response.data);
       } else {
-        return 'Error';
+        return 'Error getAppoinment';
       }
     } catch (error) {
       return error;
@@ -101,7 +108,7 @@ class DioProvider {
       if (response.statusCode == 200 && response.data != '') {
         return response.statusCode;
       } else {
-        return 'Error';
+        return 'Error StoreReview';
       }
     } catch (error) {
       return error;
@@ -120,7 +127,7 @@ class DioProvider {
       if (response.statusCode == 200 && response.data != '') {
         return response.statusCode;
       } else {
-        return 'Error';
+        return 'Error StoreFavDoc';
       }
     } catch (error) {
       return error;
@@ -136,7 +143,7 @@ class DioProvider {
       if (response.statusCode == 200 && response.data != '') {
         return response.statusCode;
       } else {
-        return 'Error';
+        return 'Error Logout';
       }
     } catch (error) {
       return error;

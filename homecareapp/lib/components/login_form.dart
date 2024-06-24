@@ -24,14 +24,14 @@ class _LoginFormState extends State<LoginForm> {
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
+      builder: (context) => AlertDialog(
         title: Text('An Error Occurred!'),
         content: Text(message),
         actions: <Widget>[
           TextButton(
             child: Text('Okay'),
             onPressed: () {
-              Navigator.of(ctx).pop();
+              Navigator.of(context).pop();
             },
           )
         ],
@@ -99,15 +99,17 @@ class _LoginFormState extends State<LoginForm> {
                   //login here
                   final token = await DioProvider()
                       .getToken(_emailController.text, _passController.text);
+                      debugPrint('getToken berhasil');
 
                   if (token) {
                     final SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     final tokenValue = prefs.getString('token') ?? '';
 
-                    if (tokenValue.isNotEmpty) {
+                    if (tokenValue!='') {
                       //get user data
                       final response = await DioProvider().getUser(tokenValue);
+                      print(response);
                       if (response != null) {
                         Map<String, dynamic> appointment = {};
                         final user = json.decode(response);
@@ -128,10 +130,12 @@ class _LoginFormState extends State<LoginForm> {
                               .pushReplacementNamed('main');
                         }
                       } else {
+                        print('Invalid account or account not found.');
                         _showErrorDialog('Invalid account or account not found.');
                       }
                     }
                   } else {
+                    print('Invalid email or password.');
                     _showErrorDialog('Invalid email or password.');
                   }
                 },
