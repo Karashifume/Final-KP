@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DioProvider {
+  static String api = 'http://127.0.0.1:8000/api';
   //get token
   Future<dynamic> getToken(String email, String password) async {
     try {

@@ -5,6 +5,7 @@ import 'package:homecareapp/models/auth_model.dart';
 import 'package:homecareapp/screens/konsultas_booking.dart';
 import 'package:homecareapp/screens/appointment_page.dart';
 import 'package:homecareapp/utils/config.dart';
+import 'package:homecareapp/screens/insert_ktp.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -108,19 +109,20 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           Column(
                             children: [
                               GestureDetector(
-                                // onTap: () {
-                                //   Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => InsertKtp()),
-                                //   );
-                                // },
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => InsertKtp()),
+                                  );
+                                },
                                 child: CircleAvatar(
                                   radius: 30,
                                   backgroundColor: Color(0xFF69F0AE),

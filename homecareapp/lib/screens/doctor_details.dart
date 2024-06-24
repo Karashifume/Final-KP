@@ -78,7 +78,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
           )
         ],
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             AboutDoctor(
@@ -87,7 +87,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
             DetailBody(
               doctor: doctor,
             ),
-            const Spacer(),
+            // const Spacer(),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Button(

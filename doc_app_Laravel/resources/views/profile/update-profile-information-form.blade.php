@@ -54,14 +54,14 @@
 
          <!-- Name -->
          <div class="col-span-6 sm:col-span-4">
-            <x-jet-label for="name" value="{{ __('Name') }}" />
+            <x-jet-label for="name" value="name" />
             <x-jet-input id="name" type="text" class="mt-1 block w-full" wire:model.defer="state.name" autocomplete="name" />
             <x-jet-input-error for="name" class="mt-2" />
         </div>
 
         <!-- Bio Data -->
         <div class="col-span-6 sm:col-span-4">
-            <x-jet-label for="bio" value="{{ __('Bio Data') }}" />
+            <x-jet-label for="bio_data" value="bio_data" />
             <textarea class="mt-1 block w-full border-gray-300 focus:border-indigo-300 focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" id="bio" wire:model.defer="state.bio_data" placeholder="Bio Data"></textarea>
             <x-jet-input-error for="bio" class="mt-2" />
         </div>
