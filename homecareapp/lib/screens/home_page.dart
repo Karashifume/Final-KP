@@ -1,9 +1,11 @@
-import 'package:homecareapp/components/appointment_card.dart';
+import 'package:flutter/foundation.dart';
 import 'package:homecareapp/components/doctor_card.dart';
+import 'package:homecareapp/data/ktp_data.dart';
 import 'package:homecareapp/models/auth_model.dart';
+import 'package:homecareapp/screens/konsultas_booking.dart';
+import 'package:homecareapp/screens/appointment_page.dart';
 import 'package:homecareapp/utils/config.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,32 +19,31 @@ class _HomePageState extends State<HomePage> {
   Map<String, dynamic> user = {};
   Map<String, dynamic> doctor = {};
   List<dynamic> favList = [];
-  List<Map<String, dynamic>> medCat = [
-    {
-      "icon": FontAwesomeIcons.userDoctor,
-      "category": "General",
-    },
-    {
-      "icon": FontAwesomeIcons.heartPulse,
-      "category": "Cardiology",
-    },
-    {
-      "icon": FontAwesomeIcons.lungs,
-      "category": "Respirations",
-    },
-    {
-      "icon": FontAwesomeIcons.hand,
-      "category": "Dermatology",
-    },
-    {
-      "icon": FontAwesomeIcons.personPregnant,
-      "category": "Gynecology",
-    },
-    {
-      "icon": FontAwesomeIcons.teeth,
-      "category": "Dental",
-    },
-  ];
+  bool _isKtpVerified = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadKtpData();
+  }
+
+  Future<void> _loadKtpData() async {
+    if (kIsWeb) {
+      String? base64Image = await KtpData.getImageBase64();
+      if (base64Image != null) {
+        setState(() {
+          _isKtpVerified = true;
+        });
+      }
+    } else {
+      String? imagePath = await KtpData.getImagePath();
+      if (imagePath != null) {
+        setState(() {
+          _isKtpVerified = true;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,104 +69,120 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            user['name'],
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      SizedBox(height: 20),
+                      Center(
+                        child: Container(
+                          padding: EdgeInsets.all(20),
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Color(0xFF69F0AE)),
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          const SizedBox(
-                            child: CircleAvatar(
-                              radius: 30,
-                              backgroundImage:
-                                  AssetImage('assets/profile1.jpg'),
-                            ),
-                          )
-                        ],
-                      ),
-                      Config.spaceMedium,
-                      const Text(
-                        'Category',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Config.spaceSmall,
-                      SizedBox(
-                        height: Config.heightSize * 0.05,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children:
-                              List<Widget>.generate(medCat.length, (index) {
-                            return Card(
-                              margin: const EdgeInsets.only(right: 20),
-                              color: Config.primaryColor,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    FaIcon(
-                                      medCat[index]['icon'],
-                                      color: Colors.white,
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    Text(
-                                      medCat[index]['category'],
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Pengisian Data',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF69F0AE),
                                 ),
                               ),
-                            );
-                          }),
-                        ),
-                      ),
-                      Config.spaceSmall,
-                      const Text(
-                        'Appointment Today',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Config.spaceSmall,
-                      doctor.isNotEmpty
-                          ? AppointmentCard(
-                              doctor: doctor,
-                              color: Config.primaryColor,
-                            )
-                          : Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade300,
-                                borderRadius: BorderRadius.circular(10),
+                              SizedBox(height: 20),
+                              Text(
+                                user['name'],
+                                style: TextStyle(fontSize: 18),
                               ),
-                              child: const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(20),
-                                  child: Text(
-                                    'No Appointment Today',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                              SizedBox(height: 20),
+                              Text(
+                                'KTP Status: ${_isKtpVerified ? "Verified" : "Not Verified"}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: _isKtpVerified
+                                      ? Color(0xFF69F0AE)
+                                      : Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Column(
+                            children: [
+                              GestureDetector(
+                                // onTap: () {
+                                //   Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => InsertKtp()),
+                                //   );
+                                // },
+                                child: CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Color(0xFF69F0AE),
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
-                            ),
+                              SizedBox(height: 10),
+                              Text('Foto Ktp'),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => KonsultasiBooking()),
+                                  );
+                                },
+                                child: CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Color(0xFF69F0AE),
+                                  child: Icon(
+                                    Icons.local_hospital,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text('Konsultasi'),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AppointmentPage()),
+                                  );
+                                },
+                                child: CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Color(0xFF69F0AE),
+                                  child: Icon(
+                                    Icons.calendar_today,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text('Jadwal'),
+                            ],
+                          ),
+                        ],
+                      ),
                       Config.spaceSmall,
                       const Text(
                         'Top Doctors',

@@ -14,7 +14,7 @@ class AuthModel extends ChangeNotifier {
     return _isLogin;
   }
 
-  List<dynamic> get getFav {
+  List<dynamic> get getFav {  
     return _fav;
   }
 

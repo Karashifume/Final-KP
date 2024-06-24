@@ -3,6 +3,7 @@ import 'package:homecareapp/models/auth_model.dart';
 import 'package:homecareapp/screens/auth_page.dart';
 import 'package:homecareapp/screens/booking_page.dart';
 import 'package:homecareapp/screens/success_booked.dart';
+import 'package:homecareapp/screens2/home_doc.dart'; // Import the home_doc.dart
 import 'package:homecareapp/utils/config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,12 +15,10 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  //this is for push navigator
   static final navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
-    //define ThemeData here
     return ChangeNotifierProvider<AuthModel>(
       create: (context) => AuthModel(),
       child: MaterialApp(
@@ -27,7 +26,6 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Doctor App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          //pre-define input decoration
           inputDecorationTheme: const InputDecorationTheme(
             focusColor: Config.primaryColor,
             border: Config.outlinedBorder,
@@ -54,6 +52,7 @@ class MyApp extends StatelessWidget {
           'main': (context) => const MainLayout(),
           'booking_page': (context) => BookingPage(),
           'success_booking': (context) => const AppointmentBooked(),
+          'doc_dashboard': (context) => DocDash(), // Add the route for doctor dashboard
         },
       ),
     );

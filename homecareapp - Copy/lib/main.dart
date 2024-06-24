@@ -8,6 +8,7 @@ import 'package:homecareapp/screens/success_booked.dart';
 import 'package:homecareapp/screens/doctor_details.dart';
 import 'package:homecareapp/utils/config.dart';
 import 'package:provider/provider.dart';
+import 'package:homecareapp/dokter/home_doc.dart';
 import 'package:homecareapp/data/user_data.dart'; // Add this import
 
 void main() {
@@ -65,6 +66,7 @@ class MyApp extends StatelessWidget {
           'doc_detail': (context) => const DoctorDetails(),
           'booking_page': (context) => const BookingPage(),
           'success_booking': (context) => const AppointmentBooked(),
+          'docd': (context) => DocDash(),
         },
       ),
     );

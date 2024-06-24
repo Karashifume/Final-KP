@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:homecareapp/data/user_data.dart';
 import '../utils/config.dart';
 
+
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
 
@@ -78,7 +79,7 @@ class _LoginFormState extends State<LoginForm> {
                   final password = _passController.text;
 
                   if (email == 'RichardTan@gmail.com' && password == '12121212') {
-                    MyApp.navigatorKey.currentState!.pushNamed('DocDash');
+                    MyApp.navigatorKey.currentState!.pushNamed('docd');
                   } else if (await userProvider.validateUser(email, password)) {
                     final prefs = await SharedPreferences.getInstance();
                     final user = jsonDecode(prefs.getString(email)!);
