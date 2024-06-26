@@ -16,6 +16,12 @@ class Pasien extends Model
         'bio_data',
         'fav',
         'status',
+        'nik',
+        'nama_asli',
+        'tgl_lahir',
+        'alamat',
+        'agama',
+        'perkerjaan',
     ];
 
     //state this is belong to user table

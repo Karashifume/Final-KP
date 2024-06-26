@@ -28,7 +28,6 @@ class _MainLayoutState extends State<MainLayout> {
         }),
         children: <Widget>[
           const HomePage(),
-          FavPage(),
           const AppointmentPage(),
           ProfilePage(),
         ],
@@ -48,15 +47,11 @@ class _MainLayoutState extends State<MainLayout> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.houseChimneyMedical),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.solidHeart),
-            label: 'Favorite',
+            label: 'Dashboard',
           ),
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.solidCalendarCheck),
-            label: 'Appointments',
+            label: 'Riwayat Konsultasi',
           ),
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.solidUser),

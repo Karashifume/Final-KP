@@ -45,19 +45,24 @@ class DioProvider {
 
   //register new user
   Future<dynamic> registerUser(
-      String username, String email, String password) async {
-    try {
-      var user = await Dio().post('$api/register',
-          data: {'name': username, 'email': email, 'password': password});
-      if (user.statusCode == 201 && user.data != '') {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      return error;
+    String username, String email, String password) async {
+  try {
+    var user = await Dio().post('$api/register',
+        data: {'name': username, 'email': email, 'password': password});
+    
+    if (user.statusCode == 201 && user.data != '') {
+      return true; // Registrasi berhasil
+    } else if (user.statusCode == 409) {
+      // Email sudah terdaftar
+      return 'Email sudah terdaftar, gunakan email lain.';
+    } else {
+      return false; // Gagal mendaftar
     }
+  } catch (error) {
+    return error;
   }
+}
+
 
   //store booking details
   Future<dynamic> bookAppointment(

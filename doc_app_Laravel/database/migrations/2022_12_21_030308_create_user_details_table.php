@@ -20,6 +20,12 @@ return new class extends Migration
             $table->unsignedInteger('user_id')->unique();
             $table->longText('bio_data')->nullable();
             $table->string('status')->nullable();
+            $table->string('nik')->nullable();
+            $table->string('nama_asli')->nullable();
+            $table->string('tgl_lahir')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('agama')->nullable();
+            $table->string('perkerjaan')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

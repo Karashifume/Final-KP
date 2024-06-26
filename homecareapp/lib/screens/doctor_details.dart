@@ -30,7 +30,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Doctor Details'),
+        title: Text('Bio Data Doctor'),
         backgroundColor: Color(0xFF69F0AE),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -136,7 +136,7 @@ class DetailBody extends StatelessWidget {
           ),
           Config.spaceMedium,
           const Text(
-            'About Doctor',
+            'Deskripsi Dokter',
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
           ),
           Config.spaceSmall,

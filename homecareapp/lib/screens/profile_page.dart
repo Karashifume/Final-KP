@@ -76,53 +76,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         Divider(
                           color: Colors.grey[300],
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.person,
-                              color: Colors.blueAccent[400],
-                              size: 35,
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text(
-                                "Profile",
-                                style: TextStyle(
-                                  color: Config.primaryColor,
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Config.spaceSmall,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.history,
-                              color: Colors.yellowAccent[400],
-                              size: 35,
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text(
-                                "History",
-                                style: TextStyle(
-                                  color: Config.primaryColor,
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                         Config.spaceSmall,
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,

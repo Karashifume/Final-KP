@@ -1,14 +1,17 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:homecareapp/components/button.dart';
 import 'package:homecareapp/main.dart';
 import 'package:homecareapp/models/auth_model.dart';
 import 'package:homecareapp/providers/dio_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/config.dart';
 
 class SignUpForm extends StatefulWidget {
-  SignUpForm({Key? key}) : super(key: key);
+  const SignUpForm({Key? key}) : super(key: key);
 
   @override
   State<SignUpForm> createState() => _SignUpFormState();
@@ -20,6 +23,8 @@ class _SignUpFormState extends State<SignUpForm> {
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
   bool obsecurePass = true;
+  String? errorMessage; // State untuk pesan kesalahan
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -38,8 +43,14 @@ class _SignUpFormState extends State<SignUpForm> {
               prefixIcon: Icon(Icons.person_outlined),
               prefixIconColor: Config.primaryColor,
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Username must be provided';
+              }
+              return null;
+            },
           ),
-          Config.spaceSmall,
+          const SizedBox(height: 16),
           TextFormField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
@@ -51,69 +62,106 @@ class _SignUpFormState extends State<SignUpForm> {
               prefixIcon: Icon(Icons.email_outlined),
               prefixIconColor: Config.primaryColor,
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Email must be provided';
+              }
+              if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value)) {
+                return 'Enter a valid email address';
+              }
+              return null;
+            },
           ),
-          Config.spaceSmall,
+          const SizedBox(height: 16),
           TextFormField(
             controller: _passController,
             keyboardType: TextInputType.visiblePassword,
             cursorColor: Config.primaryColor,
             obscureText: obsecurePass,
             decoration: InputDecoration(
-                hintText: 'Password',
-                labelText: 'Password',
-                alignLabelWithHint: true,
-                prefixIcon: const Icon(Icons.lock_outline),
-                prefixIconColor: Config.primaryColor,
-                suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        obsecurePass = !obsecurePass;
-                      });
-                    },
-                    icon: obsecurePass
-                        ? const Icon(
-                            Icons.visibility_off_outlined,
-                            color: Colors.black38,
-                          )
-                        : const Icon(
-                            Icons.visibility_outlined,
-                            color: Config.primaryColor,
-                          ))),
+              hintText: 'Password',
+              labelText: 'Password',
+              alignLabelWithHint: true,
+              prefixIcon: const Icon(Icons.lock_outline),
+              prefixIconColor: Config.primaryColor,
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    obsecurePass = !obsecurePass;
+                  });
+                },
+                icon: Icon(
+                  obsecurePass
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  color: obsecurePass ? Colors.black38 : Config.primaryColor,
+                ),
+              ),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Password must be provided';
+              }
+              if (value.length < 6) {
+                return 'Password must be at least 6 characters long';
+              }
+              return null;
+            },
           ),
-          Config.spaceSmall,
+          const SizedBox(height: 24),
+          if (errorMessage != null) // Menampilkan pesan kesalahan jika ada
+            Text(
+              errorMessage!,
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           Consumer<AuthModel>(
             builder: (context, auth, child) {
               return Button(
                 width: double.infinity,
                 title: 'Sign Up',
                 onPressed: () async {
-                  final userRegistration = await DioProvider().registerUser(
+                  if (_formKey.currentState!.validate()) {
+                    final userRegistration = await DioProvider().registerUser(
                       _nameController.text,
                       _emailController.text,
-                      _passController.text);
+                      _passController.text,
+                    );
 
-                  //if register success, proceed to login
-                  if (userRegistration) {
-                    final token = await DioProvider()
-                        .getToken(_emailController.text, _passController.text);
+                    if (userRegistration is DioError) {
+                      if (userRegistration.response?.statusCode == 409) {
+                        // Jika email sudah terdaftar, tampilkan pesan kesalahan
+                        setState(() {
+                          errorMessage = 'Email already registered';
+                        });
+                      } else {
+                        // Handle error lain jika diperlukan
+                        setState(() {
+                          errorMessage = 'Email Alredy registered';
+                        });
+                      }
+                    } else if (userRegistration) {
+                      final token = await DioProvider().getToken(
+                        _emailController.text,
+                        _passController.text,
+                      );
 
-                    if (token) {
-                      auth.loginSuccess({}, {}); //update login status
-                      //rediret to main page
-                      MyApp.navigatorKey.currentState!.pushNamed('/');
+                      if (token) {
+                        auth.loginSuccess({}, {}); // Update login status
+                        MyApp.navigatorKey.currentState!.pushNamed('/');
+                      }
                     }
-                  } else {
-                    print('register not successful');
                   }
                 },
                 disable: false,
               );
             },
-          )
+          ),
         ],
       ),
     );
   }
 }
-
-//now, let's get all doctor details and display on Mobile screen

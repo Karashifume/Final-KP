@@ -1,11 +1,13 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:homecareapp/components/button.dart';
 import 'package:homecareapp/main.dart';
 import 'package:homecareapp/models/auth_model.dart';
 import 'package:homecareapp/providers/dio_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio/dio.dart'; // Pastikan untuk mengimpor Dio
+
 import '../utils/config.dart';
 
 class LoginForm extends StatefulWidget {
@@ -41,6 +43,12 @@ class _LoginFormState extends State<LoginForm> {
               prefixIcon: Icon(Icons.email_outlined),
               prefixIconColor: Config.primaryColor,
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your email';
+              }
+              return null;
+            },
           ),
           Config.spaceSmall,
           TextFormField(
@@ -49,26 +57,34 @@ class _LoginFormState extends State<LoginForm> {
             cursorColor: Config.primaryColor,
             obscureText: obsecurePass,
             decoration: InputDecoration(
-                hintText: 'Password',
-                labelText: 'Password',
-                alignLabelWithHint: true,
-                prefixIcon: const Icon(Icons.lock_outline),
-                prefixIconColor: Config.primaryColor,
-                suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        obsecurePass = !obsecurePass;
-                      });
-                    },
-                    icon: obsecurePass
-                        ? const Icon(
-                            Icons.visibility_off_outlined,
-                            color: Colors.black38,
-                          )
-                        : const Icon(
-                            Icons.visibility_outlined,
-                            color: Config.primaryColor,
-                          ))),
+              hintText: 'Password',
+              labelText: 'Password',
+              alignLabelWithHint: true,
+              prefixIcon: const Icon(Icons.lock_outline),
+              prefixIconColor: Config.primaryColor,
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    obsecurePass = !obsecurePass;
+                  });
+                },
+                icon: obsecurePass
+                    ? const Icon(
+                        Icons.visibility_off_outlined,
+                        color: Colors.black38,
+                      )
+                    : const Icon(
+                        Icons.visibility_outlined,
+                        color: Config.primaryColor,
+                      ),
+              ),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your password';
+              }
+              return null;
+            },
           ),
           Config.spaceSmall,
           Consumer<AuthModel>(
@@ -80,49 +96,58 @@ class _LoginFormState extends State<LoginForm> {
                   if (!_formKey.currentState!.validate()) {
                     return;
                   }
-                  //login here
-                  final token = await DioProvider()
-                      .getToken(_emailController.text, _passController.text);
 
-                  if (token) {
-                    final SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    final tokenValue = prefs.getString('token') ?? '';
+                  try {
+                    // login here
+                    final token = await DioProvider()
+                        .getToken(_emailController.text, _passController.text);
 
-                    if (tokenValue!='') {
-                      //get user data
-                      final response = await DioProvider().getUser(tokenValue);
-                      if (response != null) {
-                        Map<String, dynamic> appointment = {};
-                        final user = json.decode(response);
+                    if (token != null && token) {
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      final tokenValue = prefs.getString('token') ?? '';
 
-                        //check if any appointment today
-                        for (var doctorData in user['doctor']) {
-                          if (doctorData['appointments'] != null) {
-                            appointment = doctorData;
+                      if (tokenValue.isNotEmpty) {
+                        // get user data
+                        final response = await DioProvider().getUser(tokenValue);
+                        if (response != null) {
+                          Map<String, dynamic> appointment = {};
+                          final user = json.decode(response);
+
+                          // check if any appointment today
+                          for (var doctorData in user['doctor']) {
+                            if (doctorData['appointments'] != null) {
+                              appointment = doctorData;
+                            }
                           }
-                        }
 
-                        auth.loginSuccess(user, appointment);
-                        if (user['type'] == 'doctor') {
-                          MyApp.navigatorKey.currentState!
-                              .pushReplacementNamed('doc_dashboard');
+                          auth.loginSuccess(user, appointment);
+                          if (user['type'] == 'doctor') {
+                            MyApp.navigatorKey.currentState!
+                                .pushReplacementNamed('doc_dashboard');
+                          } else {
+                            MyApp.navigatorKey.currentState!
+                                .pushReplacementNamed('main');
+                          }
                         } else {
-                          MyApp.navigatorKey.currentState!
-                              .pushReplacementNamed('main');
+                          widget.onError('Invalid account or account not found.');
                         }
-                      } else {
-                        widget.onError('Invalid account or account not found.');
                       }
+                    } else {
+                      widget.onError('Invalid email or password.');
                     }
-                  } else {
-                    widget.onError('Invalid email or password.');
+                  } catch (e) {
+                    if (e is DioError) {
+                      widget.onError('Invalid account or account not found.');
+                    } else {
+                      widget.onError('An error occurred: $e');
+                    }
                   }
                 },
                 disable: false,
               );
             },
-          )
+          ),
         ],
       ),
     );
