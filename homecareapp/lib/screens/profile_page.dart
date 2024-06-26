@@ -15,11 +15,10 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          flex: 4,
-          child: Container(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
             width: double.infinity,
             color: Config.primaryColor,
             child: Column(
@@ -29,14 +28,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 CircleAvatar(
                   radius: 65.0,
-                  backgroundImage: AssetImage('assets/profile1.jpg'),
+                  backgroundImage: AssetImage('assets/person.jpg'),
                   backgroundColor: Colors.white,
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Text(
-                  'Amanda Tan',
+                  '',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -46,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 10,
                 ),
                 Text(
-                  '23 Years Old | Female',
+                  '',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,
@@ -55,10 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
-        ),
-        Expanded(
-          flex: 5,
-          child: Container(
+          Container(
             color: Colors.grey[200],
             child: Center(
               child: Card(
@@ -144,12 +140,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                 final SharedPreferences prefs =
                                     await SharedPreferences.getInstance();
                                 final token = prefs.getString('token') ?? '';
-
+                
                                 if (token.isNotEmpty && token != '') {
                                   //logout here
                                   final response =
                                       await DioProvider().logout(token);
-
+                
                                   if (response == 200) {
                                     //if successfully delete access token
                                     //then delete token saved at Shared Preference as well
@@ -179,8 +175,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

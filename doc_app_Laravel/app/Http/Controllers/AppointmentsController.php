@@ -19,6 +19,7 @@ class AppointmentsController extends Controller
         //retrieve all appointments from the user
         $appointment = Appointments::where('user_id', Auth::user()->id)->get();
         $doctor = User::where('type', 'doctor')->get();
+        $pasien = User::where('type', 'user')->get();
 
         //sorting appointment and doctor details
         //and get all related appointment
@@ -29,6 +30,14 @@ class AppointmentsController extends Controller
                     $data['doctor_name'] = $info['name'];
                     $data['doctor_profile'] = $info['profile_photo_url']; //typo error found
                     $data['category'] = $details['category'];
+                }
+            }
+            foreach($pasien as $info){
+                $details = $info->pasien;
+                if($data['user_id'] == $info['id']){
+                    $data['pasien_name'] = $info['name'];
+                    $data['pasien_profile'] = $info['profile_photo_url']; //typo error found
+                    // $data['nik'] = $details['nik'];
                 }
             }
         }
@@ -62,6 +71,8 @@ class AppointmentsController extends Controller
         $appointment->day = $request->get('day');
         $appointment->time = $request->get('time');
         $appointment->status = 'upcoming'; //new appointment will be saved as 'upcoming' by default
+        $appointment->keluhan = $request->get('keluhan');
+        $appointment->alamat = $request->get('alamat');
         $appointment->save();
 
         //if successfully, return status code 200

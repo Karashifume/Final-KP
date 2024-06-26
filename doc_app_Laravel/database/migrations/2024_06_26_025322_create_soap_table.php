@@ -13,19 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        //add new table for appointments
-        Schema::create('appointments', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('soap', function (Blueprint $table) {
+            $table->id();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('doc_id');
-            $table->string('date');
-            $table->string('day');
-            $table->string('time');
-            $table->string('status');
-            $table->string('keluhan');
-            $table->string('alamat');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamps();
+            $table->string('subjective');
+            $table->string('objective');
+            $table->string('assessment');
+            $table->string('planning');
         });
     }
 
@@ -36,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('appointments');
+        Schema::dropIfExists('soap');
     }
 };

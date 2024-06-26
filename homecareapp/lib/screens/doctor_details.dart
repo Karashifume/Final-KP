@@ -1,21 +1,18 @@
+import 'package:flutter/material.dart';
 import 'package:homecareapp/components/button.dart';
 import 'package:homecareapp/models/auth_model.dart';
-import 'package:homecareapp/providers/dio_provider.dart';
 import 'package:homecareapp/utils/config.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../components//custom_appbar.dart';
 
 class DoctorDetails extends StatefulWidget {
   const DoctorDetails({Key? key, required this.doctor, required this.isFav})
       : super(key: key);
+
   final Map<String, dynamic> doctor;
   final bool isFav;
 
   @override
-  State<DoctorDetails> createState() => _DoctorDetailsState();
+  _DoctorDetailsState createState() => _DoctorDetailsState();
 }
 
 class _DoctorDetailsState extends State<DoctorDetails> {
@@ -24,59 +21,23 @@ class _DoctorDetailsState extends State<DoctorDetails> {
 
   @override
   void initState() {
+    super.initState();
     doctor = widget.doctor;
     isFav = widget.isFav;
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        appTitle: 'Doctor Details',
-        icon: const FaIcon(Icons.arrow_back_ios),
-        actions: [
-          //Favarite Button
-          IconButton(
-            //press this button to add/remove favorite doctor
-            onPressed: () async {
-              //get latest favorite list from auth model
-              final list =
-                  Provider.of<AuthModel>(context, listen: false).getFav;
-
-              //if doc id is already exist, mean remove the doc id
-              if (list.contains(doctor['doc_id'])) {
-                list.removeWhere((id) => id == doctor['doc_id']);
-              } else {
-                //else, add new doctor to favorite list
-                list.add(doctor['doc_id']);
-              }
-
-              //update the list into auth model and notify all widgets
-              Provider.of<AuthModel>(context, listen: false).setFavList(list);
-
-              final SharedPreferences prefs =
-                  await SharedPreferences.getInstance();
-              final token = prefs.getString('token') ?? '';
-
-              if (token.isNotEmpty && token != '') {
-                //update the favorite list into database
-                final response = await DioProvider().storeFavDoc(token, list);
-                //if insert successfully, then change the favorite status
-
-                if (response == 200) {
-                  setState(() {
-                    isFav = !isFav;
-                  });
-                }
-              }
-            },
-            icon: FaIcon(
-              isFav ? Icons.favorite_rounded : Icons.favorite_outline,
-              color: Colors.red,
-            ),
-          )
-        ],
+      appBar: AppBar(
+        title: Text('Doctor Details'),
+        backgroundColor: Color(0xFF69F0AE),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -87,19 +48,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
             DetailBody(
               doctor: doctor,
             ),
-            // const Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Button(
-                width: double.infinity,
-                title: 'Book Appointment',
-                onPressed: () {
-                  Navigator.of(context).pushNamed('booking_page',
-                      arguments: {"doctor_id": doctor['doc_id']});
-                },
-                disable: false,
-              ),
-            ),
+
           ],
         ),
       ),
@@ -122,13 +71,13 @@ class AboutDoctor extends StatelessWidget {
           CircleAvatar(
             radius: 65.0,
             backgroundImage: NetworkImage(
-              "http://127.0.0.1:8000${doctor['doctor_profile']}",
+              doctor['doctor_profile'] ?? '',
             ),
             backgroundColor: Colors.white,
           ),
           Config.spaceMedium,
           Text(
-            "Dr ${doctor['doctor_name']}",
+            "${doctor['doctor_name']}",
             style: const TextStyle(
               color: Colors.black,
               fontSize: 24.0,
@@ -138,9 +87,9 @@ class AboutDoctor extends StatelessWidget {
           Config.spaceSmall,
           SizedBox(
             width: Config.widthSize * 0.75,
-            child: const Text(
-              'MBBS (International Medical University, Malaysia), MRCP (Royal College of Physicians, United Kingdom)',
-              style: TextStyle(
+            child: Text(
+              doctor['category'] ?? '',
+              style: const TextStyle(
                 color: Colors.grey,
                 fontSize: 15,
               ),
@@ -152,7 +101,7 @@ class AboutDoctor extends StatelessWidget {
           SizedBox(
             width: Config.widthSize * 0.75,
             child: const Text(
-              'Sarawak General Hospital',
+              'Rumah Sakit Mohammad Hoesin',
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -192,7 +141,7 @@ class DetailBody extends StatelessWidget {
           ),
           Config.spaceSmall,
           Text(
-            'Dr. ${doctor['doctor_name']} is an experience ${doctor['category']} Specialist at Sarawak, graduated since 2008, and completed his/her training at Sungai Buloh General Hospital.',
+            '${doctor['bio_data']}',
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               height: 1.5,

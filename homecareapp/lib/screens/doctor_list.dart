@@ -4,6 +4,7 @@ import 'package:homecareapp/models/auth_model.dart';
 import 'package:homecareapp/utils/config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:homecareapp/screens/doctor_details.dart';
 
 class DoctorList extends StatefulWidget {
   const DoctorList({Key? key}) : super(key: key);
@@ -17,10 +18,6 @@ class _DoctorListState extends State<DoctorList> {
   Map<String, dynamic> doctor = {};
   List<dynamic> favList = [];
 
-
-  
-
-
   @override
   Widget build(BuildContext context) {
     Config().init(context);
@@ -29,7 +26,15 @@ class _DoctorListState extends State<DoctorList> {
     favList = Provider.of<AuthModel>(context, listen: false).getFav;
 
     return Scaffold(
-      //if user is empty, then return progress indicator
+      appBar: AppBar(
+        backgroundColor: Color(0xFF69F0AE),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: user.isEmpty
           ? const Center(
               child: CircularProgressIndicator(),
@@ -50,11 +55,10 @@ class _DoctorListState extends State<DoctorList> {
                         children: List.generate(user['doctor'].length, (index) {
                           return DoctorCard(
                             doctor: user['doctor'][index],
-                            //if lates fav list contains particular doctor id, then show fav icon
-                            isFav: favList
-                                    .contains(user['doctor'][index]['doc_id'])
-                                ? true
-                                : false,
+                            isFav: favList.contains(
+                              user['doctor'][index]['doc_id'],
+                            ),
+                            isClickable: true,
                           );
                         }),
                       ),

@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-
+                      SizedBox(height: 20), // Add space here
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
@@ -159,30 +159,30 @@ class _HomePageState extends State<HomePage> {
                               Text('Konsultasi'),
                             ],
                           ),
-                          Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AppointmentPage()),
-                                  );
-                                },
-                                child: CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor: Color(0xFF69F0AE),
-                                  child: Icon(
-                                    Icons.calendar_today,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Text('Jadwal'),
-                            ],
-                          ),
+                          // Column(
+                          //   children: [
+                          //     GestureDetector(
+                          //       onTap: () {
+                          //         Navigator.push(
+                          //           context,
+                          //           MaterialPageRoute(
+                          //               builder: (context) =>
+                          //                   AppointmentPage()),
+                          //         );
+                          //       },
+                          //       child: CircleAvatar(
+                          //         radius: 30,
+                          //         backgroundColor: Color(0xFF69F0AE),
+                          //         child: Icon(
+                          //           Icons.calendar_today,
+                          //           color: Colors.white,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     SizedBox(height: 10),
+                          //     Text('Jadwal'),
+                          //   ],
+                          // ),
                         ],
                       ),
                       Config.spaceSmall,
@@ -195,16 +195,17 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Config.spaceSmall,
                       Column(
-                        children: List.generate(user['doctor'].length, (index) {
-                          return DoctorCard(
-                            doctor: user['doctor'][index],
-                            //if lates fav list contains particular doctor id, then show fav icon
-                            isFav: favList
-                                    .contains(user['doctor'][index]['doc_id'])
-                                ? true
-                                : false,
-                          );
-                        }),
+                        children: List.generate(
+                          user['doctor'].length > 10 ? 10 : user['doctor'].length,
+                          (index) {
+                            return DoctorCard(
+                              doctor: user['doctor'][index],
+                              //if lates fav list contains particular doctor id, then show fav icon
+                              isFav: favList.contains(user['doctor'][index]['doc_id']),
+                              isClickable: false, // Disable clickable for homepage
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),

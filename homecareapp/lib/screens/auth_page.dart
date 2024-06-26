@@ -1,9 +1,7 @@
 import 'package:homecareapp/components/login_form.dart';
 import 'package:homecareapp/components/sign_up_form.dart';
-import 'package:homecareapp/components/social_button.dart';
 import 'package:homecareapp/utils/text.dart';
 import 'package:flutter/material.dart';
-
 import '../utils/config.dart';
 
 class AuthPage extends StatefulWidget {
@@ -15,6 +13,14 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   bool isSignIn = true;
+  String? errorMessage;
+
+  void handleError(String message) {
+    setState(() {
+      errorMessage = message;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Config().init(context);
@@ -30,14 +36,26 @@ class _AuthPageState extends State<AuthPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              AppText.enText['welcome_text']!,
-              style: const TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              children: <Widget>[
+                const SizedBox(width: 60),  // Add spacing between text and image
+                Image.asset('assets/logorsmh.jpg', height: 106),
+                const SizedBox(width: 1),  // Add spacing between text and image
+                Image.asset('assets/New Logo RSMH.png', height: 55),   // Adjust the size as needed
+              ],
             ),
             Config.spaceSmall,
+            if (errorMessage != null) ...[
+              Text(
+                errorMessage!,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Config.spaceSmall,
+            ],
             Text(
               isSignIn
                   ? AppText.enText['signIn_text']!
@@ -48,7 +66,7 @@ class _AuthPageState extends State<AuthPage> {
               ),
             ),
             Config.spaceSmall,
-            isSignIn ? LoginForm() : SignUpForm(),
+            isSignIn ? LoginForm(onError: handleError) : SignUpForm(),
             Config.spaceSmall,
             isSignIn
                 ? Center(
@@ -66,24 +84,14 @@ class _AuthPageState extends State<AuthPage> {
                   )
                 : Container(),
             const Spacer(),
-            Center(
-              child: Text(
-                AppText.enText['social-login']!,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.grey.shade500,
-                ),
-              ),
-            ),
             Config.spaceSmall,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const <Widget>[
-                SocialButton(social: 'google'),
-                SocialButton(social: 'facebook'),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: const <Widget>[
+            //     SocialButton(social: 'google'),
+            //     SocialButton(social: 'facebook'),
+            //   ],
+            // ),
             Config.spaceSmall,
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

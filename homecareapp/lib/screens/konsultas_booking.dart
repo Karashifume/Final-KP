@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:homecareapp/components/doctor_card.dart';
 import 'package:homecareapp/screens/doctor_list.dart';
 import 'package:homecareapp/utils/config.dart';
-import 'package:homecareapp/screens/booking_page.dart';
+import 'package:homecareapp/screens/tanggal_page.dart';
+import 'package:homecareapp/providers/dio_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class KonsultasiBooking extends StatefulWidget {
   const KonsultasiBooking({Key? key}) : super(key: key);
 
   @override
-  _KonsultasiBookingPageState createState() => _KonsultasiBookingPageState();
+  _KonsultasiTanggalWaktuState createState() => _KonsultasiTanggalWaktuState();
 }
 
-class _KonsultasiBookingPageState extends State<KonsultasiBooking> {
+class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
   final _keluhanController = TextEditingController();
   final _alamatController = TextEditingController();
   Map<String, dynamic>? selectedDoctor;
@@ -19,19 +21,18 @@ class _KonsultasiBookingPageState extends State<KonsultasiBooking> {
   String? selectedDay;
   String? selectedTime;
 
-  void _showConsultationPopup() {
+  void _showConsultationPopup(String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Mohon Tunggu'),
-          content: Text('Permintaan Konsultasi Anda Sedang Di Verifikasi'),
+          title: Text('Pesan Konsultasi Disimpan'),
+          content: Text(message),
           actions: <Widget>[
             TextButton(
               child: Text('Okay'),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the popup
-                Navigator.of(context).pushReplacementNamed('main'); // Navigate to 'main'
               },
             ),
           ],
@@ -52,6 +53,36 @@ class _KonsultasiBookingPageState extends State<KonsultasiBooking> {
       selectedDay = timeDetails['day'];
       selectedTime = timeDetails['time'];
     });
+  }
+
+  Future<void> _bookAppointment() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token') ?? '';
+
+    if (_keluhanController.text.isEmpty ||
+        selectedDoctor == null ||
+        selectedDate == null ||
+        selectedTime == null ||
+        _alamatController.text.isEmpty) {
+      _showConsultationPopup('Semua kolom harus diisi.');
+      return;
+    }
+
+    final result = await DioProvider().bookAppointment(
+      selectedDate!,
+      selectedDay!,
+      selectedTime!,
+      selectedDoctor!['doc_id'],
+      _keluhanController.text,
+      _alamatController.text,
+      token,
+    );
+
+    if (result == 200) {
+      Navigator.of(context).pushReplacementNamed('main');
+    } else {
+      _showConsultationPopup('Terjadi kesalahan saat memesan konsultasi.');
+    }
   }
 
   @override
@@ -148,7 +179,7 @@ class _KonsultasiBookingPageState extends State<KonsultasiBooking> {
               onTap: () async {
                 final result = await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BookingPage()),
+                  MaterialPageRoute(builder: (context) => TanggalWaktu()),
                 );
                 if (result != null) {
                   _selectTime(result);
@@ -239,9 +270,9 @@ class _KonsultasiBookingPageState extends State<KonsultasiBooking> {
                   backgroundColor: Color(0xFF69F0AE),
                   padding: EdgeInsets.symmetric(horizontal: 100, vertical: 20),
                 ),
-                onPressed: _showConsultationPopup,
+                onPressed: _bookAppointment,
                 child: Text(
-                  'Konsultasi',
+                  'Pesan Konsultasi',
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.white,

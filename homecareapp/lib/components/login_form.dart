@@ -9,7 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/config.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({Key? key}) : super(key: key);
+  final Function(String) onError; // Callback for error messages
+
+  const LoginForm({Key? key, required this.onError}) : super(key: key);
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -20,24 +22,6 @@ class _LoginFormState extends State<LoginForm> {
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
   bool obsecurePass = true;
-
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('An Error Occurred!'),
-        content: Text(message),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Okay'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +83,6 @@ class _LoginFormState extends State<LoginForm> {
                   //login here
                   final token = await DioProvider()
                       .getToken(_emailController.text, _passController.text);
-                      debugPrint('getToken berhasil');
 
                   if (token) {
                     final SharedPreferences prefs =
@@ -109,7 +92,6 @@ class _LoginFormState extends State<LoginForm> {
                     if (tokenValue!='') {
                       //get user data
                       final response = await DioProvider().getUser(tokenValue);
-                      print(response);
                       if (response != null) {
                         Map<String, dynamic> appointment = {};
                         final user = json.decode(response);
@@ -130,13 +112,11 @@ class _LoginFormState extends State<LoginForm> {
                               .pushReplacementNamed('main');
                         }
                       } else {
-                        print('Invalid account or account not found.');
-                        _showErrorDialog('Invalid account or account not found.');
+                        widget.onError('Invalid account or account not found.');
                       }
                     }
                   } else {
-                    print('Invalid email or password.');
-                    _showErrorDialog('Invalid email or password.');
+                    widget.onError('Invalid email or password.');
                   }
                 },
                 disable: false,

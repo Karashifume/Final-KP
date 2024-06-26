@@ -1,10 +1,11 @@
 import 'package:homecareapp/main_layout.dart';
 import 'package:homecareapp/models/auth_model.dart';
 import 'package:homecareapp/screens/auth_page.dart';
-import 'package:homecareapp/screens/booking_page.dart';
+import 'package:homecareapp/screens/tanggal_page.dart';
 import 'package:homecareapp/screens/success_booked.dart';
 import 'package:homecareapp/screens2/home_doc.dart'; // Import the home_doc.dart
 import 'package:homecareapp/utils/config.dart';
+import 'package:homecareapp/screens/konsultas_booking.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -50,9 +51,10 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => const AuthPage(),
           'main': (context) => const MainLayout(),
-          'booking_page': (context) => BookingPage(),
+          'tanggal_page': (context) => TanggalWaktu(),
           'success_booking': (context) => const AppointmentBooked(),
           'doc_dashboard': (context) => DocDash(), // Add the route for doctor dashboard
+          'konsultasi': (context) => const KonsultasiBooking(),
         },
       ),
     );
