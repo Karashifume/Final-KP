@@ -41,7 +41,6 @@ class AppointmentsController extends Controller
                 }
             }
         }
-
         return $appointment;
     }
 
