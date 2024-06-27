@@ -55,7 +55,7 @@ abstract class AbstractSyslogHandler extends AbstractProcessingHandler
         'mail'     => LOG_MAIL,
         'news'     => LOG_NEWS,
         'syslog'   => LOG_SYSLOG,
-        'pasien'     => LOG_USER,
+        'user'     => LOG_USER,
         'uucp'     => LOG_UUCP,
     ];
 

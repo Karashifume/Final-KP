@@ -28,7 +28,7 @@ class FunctionsMatcher extends AbstractMatcher
         $func = $this->getInput($tokens);
 
         $functions = \get_defined_functions();
-        $allFunctions = \array_merge($functions['pasien'], $functions['internal']);
+        $allFunctions = \array_merge($functions['user'], $functions['internal']);
 
         return \array_filter($allFunctions, function ($function) use ($func) {
             return AbstractMatcher::startsWith($func, $function);

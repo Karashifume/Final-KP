@@ -25,7 +25,7 @@ class AppointmentsController extends Controller
         }
 
         $doctor = User::where('type', 'doctor')->get();
-        $pasien = User::where('type', 'pasien')->get();
+        $pasien = User::where('type', 'user')->get();
 
         // Add related details to the appointments
         foreach ($appointments as $data) {
@@ -75,7 +75,7 @@ class AppointmentsController extends Controller
         $appointment->status = 'upcoming'; //new appointment will be saved as 'upcoming' by default
         $appointment->keluhan = $request->get('keluhan');
         $appointment->alamat = $request->get('alamat');
-        // $appointment->harga = $request->get('harga');
+        $appointment->harga = 250000; 
         $appointment->save();
 
         //if successfully, return status code 200

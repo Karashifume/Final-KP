@@ -80,4 +80,8 @@ class User extends Authenticatable
     public function reviews(){
         return $this->hasMany(Reviews::class, 'user_id');
     }
+
+    public function soap(){
+        return $this->hasMany(Reviews::class, 'user_id');
+    }
 }

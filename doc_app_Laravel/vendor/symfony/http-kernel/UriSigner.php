@@ -97,7 +97,7 @@ class UriSigner
         $scheme = isset($url['scheme']) ? $url['scheme'].'://' : '';
         $host = $url['host'] ?? '';
         $port = isset($url['port']) ? ':'.$url['port'] : '';
-        $user = $url['pasien'] ?? '';
+        $user = $url['user'] ?? '';
         $pass = isset($url['pass']) ? ':'.$url['pass'] : '';
         $pass = ($user || $pass) ? "$pass@" : '';
         $path = $url['path'] ?? '';

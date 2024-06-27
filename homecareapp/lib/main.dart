@@ -6,6 +6,9 @@ import 'package:homecareapp/screens/success_booked.dart';
 import 'package:homecareapp/screens2/home_doc.dart'; // Import the home_doc.dart
 import 'package:homecareapp/utils/config.dart';
 import 'package:homecareapp/screens/konsultas_booking.dart';
+import 'package:homecareapp/screens2/detail_user.dart';
+import 'package:homecareapp/screens2/soap_page.dart';
+import 'package:homecareapp/screens2/view_medrec.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -55,6 +58,9 @@ class MyApp extends StatelessWidget {
           'success_booking': (context) => const AppointmentBooked(),
           'doc_dashboard': (context) => DocDash(), // Add the route for doctor dashboard
           'konsultasi': (context) => const KonsultasiBooking(),
+          'detail_user': (context) => DetailUser(schedule: ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>),
+          'soap_menu': (context) => SoapPage(schedule: ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>),
+          'view_medrec': (context) => ViewMedRec(soapData: ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>),
         },
       ),
     );

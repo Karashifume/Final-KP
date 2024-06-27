@@ -50,7 +50,7 @@ $config->merge([
         'driver' => 'mysql',
         'port' => 3306,
         'database' => 'mydb',
-        'username' => 'pasien',
+        'username' => 'user',
         'password' => 'secret',
     ],
 ]);

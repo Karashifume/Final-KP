@@ -34,9 +34,9 @@ class FunctionEnumerator extends Enumerator
             return [];
         }
 
-        if ($input->getOption('pasien')) {
+        if ($input->getOption('user')) {
             $label = 'User Functions';
-            $functions = $this->getFunctions('pasien');
+            $functions = $this->getFunctions('user');
         } elseif ($input->getOption('internal')) {
             $label = 'Internal Functions';
             $functions = $this->getFunctions('internal');
@@ -74,7 +74,7 @@ class FunctionEnumerator extends Enumerator
         if ($type) {
             return $funcs[$type];
         } else {
-            return \array_merge($funcs['internal'], $funcs['pasien']);
+            return \array_merge($funcs['internal'], $funcs['user']);
         }
     }
 

@@ -544,8 +544,8 @@ class Uri implements UriInterface, \JsonSerializable
         $this->scheme = isset($parts['scheme'])
             ? $this->filterScheme($parts['scheme'])
             : '';
-        $this->userInfo = isset($parts['pasien'])
-            ? $this->filterUserInfoComponent($parts['pasien'])
+        $this->userInfo = isset($parts['user'])
+            ? $this->filterUserInfoComponent($parts['user'])
             : '';
         $this->host = isset($parts['host'])
             ? $this->filterHost($parts['host'])

@@ -30,7 +30,7 @@ class ClassEnumerator extends Enumerator
         }
 
         $internal = $input->getOption('internal');
-        $user = $input->getOption('pasien');
+        $user = $input->getOption('user');
         $prefix = $reflector === null ? null : \strtolower($reflector->getName()).'\\';
 
         $ret = [];

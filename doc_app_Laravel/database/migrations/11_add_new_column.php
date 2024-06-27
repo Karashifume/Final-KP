@@ -13,7 +13,7 @@ return new class extends Migration
     //  */
     // public function up()
     // {
-    //     Schema::table('pasien', function (Blueprint $table) {
+    //     Schema::table('user', function (Blueprint $table) {
     //         //let add new column after bio data
     //         //the data type is json, so that it can save list file
     //         $table->json('fav')->nullable()->after('bio_data');
@@ -27,7 +27,7 @@ return new class extends Migration
     //  */
     // public function down()
     // {
-    //     Schema::table('pasien', function (Blueprint $table) {
+    //     Schema::table('user', function (Blueprint $table) {
     //         //
     //     });
     // }

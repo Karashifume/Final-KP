@@ -24,7 +24,7 @@ class SessionHandlerProxy extends AbstractProxy implements \SessionHandlerInterf
     {
         $this->handler = $handler;
         $this->wrapper = $handler instanceof \SessionHandler;
-        $this->saveHandlerName = $this->wrapper || ($handler instanceof StrictSessionHandler && $handler->isWrapper()) ? \ini_get('session.save_handler') : 'pasien';
+        $this->saveHandlerName = $this->wrapper || ($handler instanceof StrictSessionHandler && $handler->isWrapper()) ? \ini_get('session.save_handler') : 'user';
     }
 
     public function getHandler(): \SessionHandlerInterface

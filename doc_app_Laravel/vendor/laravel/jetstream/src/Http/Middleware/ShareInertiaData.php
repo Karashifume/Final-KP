@@ -39,7 +39,7 @@ class ShareInertiaData
                     'managesProfilePhotos' => Jetstream::managesProfilePhotos(),
                 ];
             },
-            'pasien' => function () use ($request) {
+            'user' => function () use ($request) {
                 if (! $user = $request->user()) {
                     return;
                 }

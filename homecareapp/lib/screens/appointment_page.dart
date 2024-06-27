@@ -12,10 +12,10 @@ class AppointmentPage extends StatefulWidget {
 }
 
 //enum for appointment status
-enum FilterStatus { daftar, selesai, batal }
+enum FilterStatus { upcoming, complete, cancel }
 
 class _AppointmentPageState extends State<AppointmentPage> {
-  FilterStatus status = FilterStatus.daftar; //initial status
+  FilterStatus status = FilterStatus.upcoming; //initial status
   Alignment _alignment = Alignment.centerLeft;
   List<dynamic> schedules = [];
 
@@ -75,11 +75,11 @@ class _AppointmentPageState extends State<AppointmentPage> {
                             onTap: () {
                               setState(() {
                                 status = filterStatus;
-                                if (filterStatus == FilterStatus.daftar) {
+                                if (filterStatus == FilterStatus.upcoming) {
                                   _alignment = Alignment.centerLeft;
-                                } else if (filterStatus == FilterStatus.selesai) {
+                                } else if (filterStatus == FilterStatus.complete) {
                                   _alignment = Alignment.center;
-                                } else if (filterStatus == FilterStatus.batal) {
+                                } else if (filterStatus == FilterStatus.cancel) {
                                   _alignment = Alignment.centerRight;
                                 }
                               });

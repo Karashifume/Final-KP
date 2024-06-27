@@ -15,14 +15,14 @@ return new class extends Migration
     {
         Schema::create('soap', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
-            $table->unsignedInteger('doc_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedInteger('appoint_id'); // Foreign key from appointments table
             $table->string('subjective');
             $table->string('objective');
             $table->string('assessment');
             $table->string('planning');
             $table->string('resep');
+            $table->foreign('appoint_id')->references('id')->on('appointments')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

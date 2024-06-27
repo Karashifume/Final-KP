@@ -121,7 +121,7 @@ class Mirror
 
         $allNames = \array_merge(
             $functions['internal'],
-            $functions['pasien'],
+            $functions['user'],
             \get_declared_classes(),
             \get_declared_interfaces(),
             \get_declared_traits(),

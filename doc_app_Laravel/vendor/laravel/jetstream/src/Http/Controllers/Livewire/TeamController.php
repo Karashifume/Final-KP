@@ -25,7 +25,7 @@ class TeamController extends Controller
         }
 
         return view('teams.show', [
-            'pasien' => $request->user(),
+            'user' => $request->user(),
             'team' => $team,
         ]);
     }
@@ -41,7 +41,7 @@ class TeamController extends Controller
         Gate::authorize('create', Jetstream::newTeamModel());
 
         return view('teams.create', [
-            'pasien' => $request->user(),
+            'user' => $request->user(),
         ]);
     }
 }

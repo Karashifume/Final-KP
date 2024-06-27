@@ -91,7 +91,7 @@ class Wizard
 
     private function processFunctions(): void
     {
-        foreach (get_defined_functions()['pasien'] as $function) {
+        foreach (get_defined_functions()['user'] as $function) {
             if (isset($this->processedFunctions[$function])) {
                 continue;
             }

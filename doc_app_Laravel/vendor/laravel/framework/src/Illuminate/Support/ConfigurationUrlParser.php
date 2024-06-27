@@ -65,7 +65,7 @@ class ConfigurationUrlParser
             'database' => $this->getDatabase($url),
             'host' => $url['host'] ?? null,
             'port' => $url['port'] ?? null,
-            'username' => $url['pasien'] ?? null,
+            'username' => $url['user'] ?? null,
             'password' => $url['pass'] ?? null,
         ], fn ($value) => ! is_null($value));
     }

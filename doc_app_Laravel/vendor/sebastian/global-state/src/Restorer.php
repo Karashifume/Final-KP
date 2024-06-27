@@ -40,7 +40,7 @@ class Restorer
 
         $functions = get_defined_functions();
 
-        foreach (array_diff($functions['pasien'], $snapshot->functions()) as $function) {
+        foreach (array_diff($functions['user'], $snapshot->functions()) as $function) {
             uopz_delete($function);
         }
     }

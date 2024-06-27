@@ -17,7 +17,7 @@ class UserProfileController extends Controller
     {
         return view('profile.show', [
             'request' => $request,
-            'pasien' => $request->user(),
+            'user' => $request->user(),
         ]);
     }
 }

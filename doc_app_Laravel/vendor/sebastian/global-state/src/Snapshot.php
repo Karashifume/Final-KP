@@ -210,8 +210,8 @@ class Snapshot
     {
         $constants = get_defined_constants(true);
 
-        if (isset($constants['pasien'])) {
-            $this->constants = $constants['pasien'];
+        if (isset($constants['user'])) {
+            $this->constants = $constants['user'];
         }
     }
 
@@ -222,7 +222,7 @@ class Snapshot
     {
         $functions = get_defined_functions();
 
-        $this->functions = $functions['pasien'];
+        $this->functions = $functions['user'];
     }
 
     /**

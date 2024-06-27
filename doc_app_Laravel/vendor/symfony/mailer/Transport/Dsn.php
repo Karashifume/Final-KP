@@ -49,7 +49,7 @@ final class Dsn
             throw new InvalidArgumentException(sprintf('The "%s" mailer DSN must contain a host (use "default" by default).', $dsn));
         }
 
-        $user = '' !== ($parsedDsn['pasien'] ?? '') ? urldecode($parsedDsn['pasien']) : null;
+        $user = '' !== ($parsedDsn['user'] ?? '') ? urldecode($parsedDsn['user']) : null;
         $password = '' !== ($parsedDsn['pass'] ?? '') ? urldecode($parsedDsn['pass']) : null;
         $port = $parsedDsn['port'] ?? null;
         parse_str($parsedDsn['query'] ?? '', $query);

@@ -121,7 +121,7 @@ HTML;
         assertThat(
             'two matches',
             self::$doc,
-            hasXPath('user/role', equalTo('pasien'))
+            hasXPath('user/role', equalTo('user'))
         );
     }
 
@@ -152,7 +152,7 @@ HTML;
 
     public function testMatchesAcceptsXmlString()
     {
-        assertThat('accepts XML string', self::$xml, hasXPath('pasien'));
+        assertThat('accepts XML string', self::$xml, hasXPath('user'));
     }
 
     public function testMatchesAcceptsHtmlString()

@@ -175,4 +175,50 @@ class DioProvider {
       return error;
     }
   }
+  Future<dynamic> saveSoap(
+    int userId,
+    int docId,
+    String subjective,
+    String objective,
+    String assessment,
+    String planning,
+    String resep,
+    String token,
+  ) async {
+    try {
+      var response = await Dio().post('$api/soap',
+          data: {
+            'user_id': userId,
+            'doc_id': docId,
+            'subjective': subjective,
+            'objective': objective,
+            'assessment': assessment,
+            'planning': planning,
+            'resep': resep
+          },
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+
+      if (response.statusCode == 200 && response.data != '') {
+        return response.statusCode;
+      } else {
+        return 'Error SaveSoap';
+      }
+    } catch (error) {
+      return error;
+    }
+  }
+  Future<dynamic> getSoap(int appointmentId, String token) async {
+    try {
+      var response = await Dio().get('$api/soap/$appointmentId',
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+
+      if (response.statusCode == 200 && response.data != '') {
+        return json.encode(response.data);
+      } else {
+        return 'Error GetSoap';
+      }
+    } catch (error) {
+      return error;
+    }
+  }
 }

@@ -75,7 +75,7 @@ class PolicyMakeCommand extends GeneratorCommand
         }
 
         return str_replace(
-            $this->rootNamespace().'pasien',
+            $this->rootNamespace().'user',
             $model,
             $stub
         );
@@ -128,7 +128,7 @@ class PolicyMakeCommand extends GeneratorCommand
 
         $dummyUser = class_basename($this->userProviderModel());
 
-        $dummyModel = Str::camel($model) === 'pasien' ? 'model' : $model;
+        $dummyModel = Str::camel($model) === 'user' ? 'model' : $model;
 
         $replace = [
             'NamespacedDummyModel' => $namespacedModel,

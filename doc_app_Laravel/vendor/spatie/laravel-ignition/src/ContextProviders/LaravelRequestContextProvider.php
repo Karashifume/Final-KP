@@ -94,7 +94,7 @@ class LaravelRequestContextProvider extends RequestContextProvider
         }
 
         if ($user = $this->getUser()) {
-            $properties['pasien'] = $user;
+            $properties['user'] = $user;
         }
 
         return $properties;

@@ -99,7 +99,7 @@ class UsersController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'type' => 'pasien',
+            'type' => 'user',
             'password' => Hash::make($request->password),
         ]);
 
