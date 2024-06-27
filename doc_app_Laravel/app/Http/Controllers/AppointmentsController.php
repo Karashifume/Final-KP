@@ -16,32 +16,35 @@ class AppointmentsController extends Controller
      */
     public function index()
     {
-        //retrieve all appointments from the user
-        $appointment = Appointments::where('user_id', Auth::user()->id)->get();
-        $doctor = User::where('type', 'doctor')->get();
-        $pasien = User::where('type', 'user')->get();
+        // Retrieve appointments for the current user
+        $user = Auth::user();
+        if ($user->type == 'doctor') {
+            $appointments = Appointments::where('doc_id', $user->id)->get();
+        } else {
+            $appointments = Appointments::where('user_id', $user->id)->get();
+        }
 
-        //sorting appointment and doctor details
-        //and get all related appointment
-        foreach($appointment as $data){
-            foreach($doctor as $info){
-                $details = $info->doctor;
-                if($data['doc_id'] == $info['id']){
+        $doctor = User::where('type', 'doctor')->get();
+        $pasien = User::where('type', 'pasien')->get();
+
+        // Add related details to the appointments
+        foreach ($appointments as $data) {
+            foreach ($doctor as $info) {
+                if ($data['doc_id'] == $info['id']) {
                     $data['doctor_name'] = $info['name'];
-                    $data['doctor_profile'] = $info['profile_photo_url']; //typo error found
-                    $data['category'] = $details['category'];
+                    $data['doctor_profile'] = $info['profile_photo_url'];
+                    $data['category'] = $info->doctor['category'];
                 }
             }
-            foreach($pasien as $info){
-                $details = $info->pasien;
-                if($data['user_id'] == $info['id']){
+            foreach ($pasien as $info) {
+                if ($data['user_id'] == $info['id']) {
                     $data['pasien_name'] = $info['name'];
-                    $data['pasien_profile'] = $info['profile_photo_url']; //typo error found
-                    // $data['nik'] = $details['nik'];
+                    $data['pasien_profile'] = $info['profile_photo_url'];
                 }
             }
         }
-        return $appointment;
+
+        return response()->json($appointments);
     }
 
     /**
@@ -72,6 +75,7 @@ class AppointmentsController extends Controller
         $appointment->status = 'upcoming'; //new appointment will be saved as 'upcoming' by default
         $appointment->keluhan = $request->get('keluhan');
         $appointment->alamat = $request->get('alamat');
+        // $appointment->harga = $request->get('harga');
         $appointment->save();
 
         //if successfully, return status code 200

@@ -740,8 +740,8 @@ The following APIs and options have been marked as deprecated:
 - Marked `Guzzle\Parser\Url\UrlParser` as deprecated. Just use PHP's `parse_url()` and percent encode your UTF-8.
 - Marked `Guzzle\Common\Collection::inject()` as deprecated.
 - Marked `Guzzle\Plugin\CurlAuth\CurlAuthPlugin` as deprecated. Use
-  `$client->getConfig()->setPath('request.options/auth', array('user', 'pass', 'Basic|Digest|NTLM|Any'));` or
-  `$client->setDefaultOption('auth', array('user', 'pass', 'Basic|Digest|NTLM|Any'));`
+  `$client->getConfig()->setPath('request.options/auth', array('pasien', 'pass', 'Basic|Digest|NTLM|Any'));` or
+  `$client->setDefaultOption('auth', array('pasien', 'pass', 'Basic|Digest|NTLM|Any'));`
 
 3.7 introduces `request.options` as a parameter for a client configuration and as an optional argument to all creational
 request methods. When paired with a client's configuration settings, these options allow you to specify default settings

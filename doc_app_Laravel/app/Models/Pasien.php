@@ -22,6 +22,7 @@ class Pasien extends Model
         'alamat',
         'agama',
         'perkerjaan',
+        'ktp',
     ];
 
     //state this is belong to user table

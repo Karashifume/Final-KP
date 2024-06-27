@@ -15,6 +15,7 @@ class Soap extends Model
         'objective',
         'assessment',
         'planning',
+        'resep'
     ];
 
     //state this is belong to user table

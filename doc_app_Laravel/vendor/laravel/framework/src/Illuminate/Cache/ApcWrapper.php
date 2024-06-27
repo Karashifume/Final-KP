@@ -87,6 +87,6 @@ class ApcWrapper
      */
     public function flush()
     {
-        return $this->apcu ? apcu_clear_cache() : apc_clear_cache('user');
+        return $this->apcu ? apcu_clear_cache() : apc_clear_cache('pasien');
     }
 }

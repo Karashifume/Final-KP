@@ -64,7 +64,7 @@ class DioProvider {
 }
 
 
-  //store booking details
+  //store booking detail
   Future<dynamic> bookAppointment(
       String date, String day, String time, int doctor, String keluhan, String alamat, String token) async {
     try {
@@ -156,20 +156,22 @@ class DioProvider {
     }
   }
 
-  Future<dynamic> getKtp(String token) async {
+  Future<dynamic> storeKtp(String token, String filePath) async {
     try {
-      var user = await Dio().post('$api/ktp',
-      data:{},
+      FormData formData = FormData.fromMap({
+        'ktp': await MultipartFile.fromFile(filePath),
+      });
+
+      var response = await Dio().post('$api/ktp',
+          data: formData,
           options: Options(headers: {'Authorization': 'Bearer $token'}));
-      if (user.statusCode == 200 && user.data != '') {
-        return json.encode(user.data);
-      }
-      else {
-        print('getUser False');
-        return false;
+
+      if (response.statusCode == 200 && response.data != '') {
+        return response.statusCode;
+      } else {
+        return 'Error StoreKtp';
       }
     } catch (error) {
-      print('getUser Error');
       return error;
     }
   }

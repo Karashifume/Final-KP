@@ -61,7 +61,7 @@ class ConstantEnumerator extends Enumerator
             return [];
         }
 
-        $user = $input->getOption('user');
+        $user = $input->getOption('pasien');
         $internal = $input->getOption('internal');
         $category = $input->getOption('category');
 
@@ -71,7 +71,7 @@ class ConstantEnumerator extends Enumerator
             if ($category === 'internal') {
                 $internal = true;
                 $category = null;
-            } elseif ($category === 'user') {
+            } elseif ($category === 'pasien') {
                 $user = true;
                 $category = null;
             }
@@ -80,7 +80,7 @@ class ConstantEnumerator extends Enumerator
         $ret = [];
 
         if ($user) {
-            $ret['User Constants'] = $this->getConstants('user');
+            $ret['User Constants'] = $this->getConstants('pasien');
         }
 
         if ($internal) {
@@ -131,7 +131,7 @@ class ConstantEnumerator extends Enumerator
         $consts = \get_defined_constants(true);
 
         if ($category === 'internal') {
-            unset($consts['user']);
+            unset($consts['pasien']);
 
             return \array_merge(...\array_values($consts));
         }

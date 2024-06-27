@@ -26,7 +26,7 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Pesan Konsultasi Disimpan'),
+          title: Text('Notifikasi'),
           content: Text(message),
           actions: <Widget>[
             TextButton(

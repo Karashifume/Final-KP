@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create('pasien', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->unique();
-            $table->longText('bio_data')->nullable();
+            $table->binary('ktp')->nullable();
             $table->string('status')->nullable();
             $table->string('nik')->nullable();
             $table->string('nama_asli')->nullable();

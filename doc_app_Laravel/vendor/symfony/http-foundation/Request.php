@@ -360,8 +360,8 @@ class Request
             $server['HTTP_HOST'] .= ':'.$components['port'];
         }
 
-        if (isset($components['user'])) {
-            $server['PHP_AUTH_USER'] = $components['user'];
+        if (isset($components['pasien'])) {
+            $server['PHP_AUTH_USER'] = $components['pasien'];
         }
 
         if (isset($components['pass'])) {

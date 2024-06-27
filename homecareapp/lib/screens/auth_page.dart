@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homecareapp/components/login_form.dart';
-import 'package:homecareapp/components/sign_up_form.dart';
+import 'package:homecareapp/components/register_form.dart';
 import 'package:homecareapp/utils/text.dart';
 import '../utils/config.dart';
 

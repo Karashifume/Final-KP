@@ -47,7 +47,7 @@ final class Dsn
         }
         $this->host = $parsedDsn['host'];
 
-        $this->user = '' !== ($parsedDsn['user'] ?? '') ? urldecode($parsedDsn['user']) : null;
+        $this->user = '' !== ($parsedDsn['pasien'] ?? '') ? urldecode($parsedDsn['pasien']) : null;
         $this->password = '' !== ($parsedDsn['pass'] ?? '') ? urldecode($parsedDsn['pass']) : null;
         $this->port = $parsedDsn['port'] ?? null;
         $this->path = $parsedDsn['path'] ?? null;

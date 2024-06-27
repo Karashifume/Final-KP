@@ -54,7 +54,7 @@ class PushoverHandler extends SocketHandler
      */
     private $parameterNames = [
         'token' => true,
-        'user' => true,
+        'pasien' => true,
         'message' => true,
         'device' => true,
         'title' => true,
@@ -158,7 +158,7 @@ class PushoverHandler extends SocketHandler
 
         $dataArray = [
             'token' => $this->token,
-            'user' => $this->user,
+            'pasien' => $this->user,
             'message' => $message,
             'title' => $this->title,
             'timestamp' => $timestamp,

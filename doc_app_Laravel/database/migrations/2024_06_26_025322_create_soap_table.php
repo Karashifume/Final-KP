@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('objective');
             $table->string('assessment');
             $table->string('planning');
+            $table->string('resep');
         });
     }
 
