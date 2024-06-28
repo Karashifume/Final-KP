@@ -9,8 +9,7 @@ class Soap extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id',
-        'doc_id',
+        'appoint_id',
         'subjective',
         'objective',
         'assessment',

@@ -10,15 +10,16 @@ class SoapController extends Controller
 {
     public function store(Request $request)
     {
-        $soap = new Soap();
-        $soap->user_id = $request->get('user_id');
-        $soap->doc_id = $request->get('doc_id');
-        $soap->subjective = $request->get('subjective');
-        $soap->objective = $request->get('objective');
-        $soap->assessment = $request->get('assessment');
-        $soap->planning = $request->get('planning');
-        $soap->resep = $request->get('resep');
-        $soap->save();
+        $soap = Soap::updateOrCreate(
+            ['appoint_id' => $request->get('appoint_id')],
+            [
+                'subjective' => $request->get('subjective'),
+                'objective' => $request->get('objective'),
+                'assessment' => $request->get('assessment'),
+                'planning' => $request->get('planning'),
+                'resep' => $request->get('resep')
+            ]
+        );
 
         return response()->json([
             'success' => 'SOAP has been saved successfully!',
@@ -27,7 +28,7 @@ class SoapController extends Controller
 
     public function show($id)
     {
-        $soap = Soap::where('user_id', $id)->first();
+        $soap = Soap::where('appoint_id', $id)->first();
 
         if ($soap) {
             return response()->json($soap, 200);

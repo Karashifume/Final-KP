@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:homecareapp/providers/dio_provider.dart';
 import 'package:homecareapp/utils/config.dart';
@@ -19,18 +21,40 @@ class _SoapPageState extends State<SoapPage> {
   final _planningController = TextEditingController();
   final _resepController = TextEditingController();
 
-  void _showWarningPopup(String message) {
+  @override
+  void initState() {
+    super.initState();
+    _loadSoapData();
+  }
+
+  Future<void> _loadSoapData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token') ?? '';
+    final soap = await DioProvider().getSoap(widget.schedule['id'], token);
+
+    if (soap != 'Error') {
+      final soapData = json.decode(soap);
+      _subjectiveController.text = soapData['subjective'];
+      _objectiveController.text = soapData['objective'];
+      _assessmentController.text = soapData['assessment'];
+      _planningController.text = soapData['planning'];
+      _resepController.text = soapData['resep'];
+    }
+  }
+
+  void _showPopup(String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Warning'),
+          title: Text('Notifikasi'),
           content: Text(message),
           actions: <Widget>[
             TextButton(
               child: Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Navigate back to DocDash
               },
             ),
           ],
@@ -45,7 +69,7 @@ class _SoapPageState extends State<SoapPage> {
         _assessmentController.text.isEmpty ||
         _planningController.text.isEmpty ||
         _resepController.text.isEmpty) {
-      _showWarningPopup('Ada Kotak Yang Belom Di Isi');
+      _showPopup('Ada Kotak Yang Belom Di Isi');
       return;
     }
 
@@ -54,7 +78,6 @@ class _SoapPageState extends State<SoapPage> {
 
     final result = await DioProvider().saveSoap(
       widget.schedule['id'],
-      widget.schedule['doc_id'],
       _subjectiveController.text,
       _objectiveController.text,
       _assessmentController.text,
@@ -64,9 +87,9 @@ class _SoapPageState extends State<SoapPage> {
     );
 
     if (result == 200) {
-      Navigator.of(context).pop();
+      _showPopup('SOAP berhasil Disimpan');
     } else {
-      _showWarningPopup('Terjadi kesalahan saat menyimpan SOAP');
+      _showPopup('Terjadi kesalahan saat menyimpan SOAP');
     }
   }
 

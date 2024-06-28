@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointments;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Pasien;
 use Illuminate\Support\Facades\Auth;
 
 class AppointmentsController extends Controller
@@ -18,8 +19,13 @@ class AppointmentsController extends Controller
     {
         // Retrieve appointments for the current user
         $user = Auth::user();
+        
         if ($user->type == 'doctor') {
-            $appointments = Appointments::where('doc_id', $user->id)->get();
+            $appointments = Appointments::where('doc_id', $user->id)
+            ->whereHas('user.pasien', function($query) {
+                $query->where('verified', true);
+            })
+            ->get();
         } else {
             $appointments = Appointments::where('user_id', $user->id)->get();
         }
@@ -64,26 +70,24 @@ class AppointmentsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //this controller is to store booking details post from mobile app
-        $appointment = new Appointments();
-        $appointment->user_id = Auth::user()->id;
-        $appointment->doc_id = $request->get('doctor_id');
-        $appointment->date = $request->get('date');
-        $appointment->day = $request->get('day');
-        $appointment->time = $request->get('time');
-        $appointment->status = 'upcoming'; //new appointment will be saved as 'upcoming' by default
-        $appointment->keluhan = $request->get('keluhan');
-        $appointment->alamat = $request->get('alamat');
-        $appointment->harga = 250000; 
-        $appointment->save();
+{
+    $user = Auth::user();
 
-        //if successfully, return status code 200
-        return response()->json([
-            'success'=>'New Appointment has been made successfully!',
-        ], 200);
+    $appointment = new Appointments();
+    $appointment->user_id = $user->id;
+    $appointment->doc_id = $request->get('doctor_id');
+    $appointment->date = $request->get('date');
+    $appointment->day = $request->get('day');
+    $appointment->time = $request->get('time');
+    $appointment->status = 'upcoming'; //new appointment will be saved as 'upcoming' by default
+    $appointment->keluhan = $request->get('keluhan');
+    $appointment->alamat = $request->get('alamat');
+    $appointment->harga = 250000; 
+    $appointment->save();
 
-    }
+    return response()->json(['success' => 'New Appointment has been made successfully!'], 200);
+}
+
 
     /**
      * Display the specified resource.

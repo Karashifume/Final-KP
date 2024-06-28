@@ -38,12 +38,12 @@ class CreateNewUser implements CreatesNewUsers
             'type' => 'doctor',
             'password' => Hash::make($input['password']),
         ]);
-        // if ($user->type === 'doctor') {
-        //     Doctor::create([
-        //         'doc_id' => $user->id, // Assuming 'doc_id' should match the user's id
-        //         // You may want to provide defaults or additional inputs for these fields
-        //     ]);
-        // }
+        if ($user->type === 'doctor') {
+            Doctor::create([
+                'doc_id' => $user->id, // Assuming 'doc_id' should match the user's id
+                // You may want to provide defaults or additional inputs for these fields
+            ]);
+        }
 
         return $user;
     }

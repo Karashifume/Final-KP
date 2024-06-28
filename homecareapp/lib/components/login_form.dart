@@ -125,6 +125,9 @@ class _LoginFormState extends State<LoginForm> {
                           if (user['type'] == 'doctor') {
                             MyApp.navigatorKey.currentState!
                                 .pushReplacementNamed('doc_dashboard');
+                          } else if (user['type'] == 'admisi') {
+                            MyApp.navigatorKey.currentState!
+                                .pushReplacementNamed('admisi_das');
                           } else {
                             MyApp.navigatorKey.currentState!
                                 .pushReplacementNamed('main');

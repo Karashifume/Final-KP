@@ -32,20 +32,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadKtpData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token') ?? '';
-
-    final response = await DioProvider().getUser(token); // Get user data
-    user = jsonDecode(response);
-    
-    if (user['ktp'] != null) {
-      setState(() {
-        _isKtpVerified = true;
-      });
+      if (kIsWeb) {
+      String? base64Image = await KtpData.getImageBase64();
+      if (base64Image != null) {
+        setState(() {
+          _isKtpVerified = true;
+        });
+      }
     } else {
-      setState(() {
-        _isKtpVerified = false;
-      });
+      String? imagePath = await KtpData.getImagePath();
+      if (imagePath != null) {
+        setState(() {
+          _isKtpVerified = true;
+        });
+      }
     }
   }
 
@@ -144,16 +144,16 @@ class _HomePageState extends State<HomePage> {
                           Column(
                             children: [
                               GestureDetector(
-                                onTap: () {
+                                onTap: _isKtpVerified ? () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => KonsultasiBooking()),
                                   );
-                                },
+                                } : null,
                                 child: CircleAvatar(
                                   radius: 30,
-                                  backgroundColor: Color(0xFF69F0AE),
+                                  backgroundColor: _isKtpVerified ? Color(0xFF69F0AE) : Colors.grey,
                                   child: Icon(
                                     Icons.local_hospital,
                                     color: Colors.white,

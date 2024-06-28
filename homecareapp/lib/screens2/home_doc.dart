@@ -241,8 +241,10 @@ class _DocDashState extends State<DocDash> {
                                               arguments: schedule,
                                             );
                                           },
-                                          child: const Text(
-                                            'Insert SOAP',
+                                          child: Text(
+                                            schedule['status'] == 'complete'
+                                                ? 'Edit SOAP'
+                                                : 'Insert SOAP',
                                             style:
                                                 TextStyle(color: Colors.white),
                                           ),

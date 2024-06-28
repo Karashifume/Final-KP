@@ -1,7 +1,9 @@
 import 'dart:convert';
-
+import 'dart:typed_data';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:html' as html;
 
 class DioProvider {
   static String api = 'http://127.0.0.1:8000/api';
@@ -156,57 +158,53 @@ class DioProvider {
     }
   }
 
-  Future<dynamic> storeKtp(String token, String filePath) async {
+  Future<dynamic> storeKtp(String token, String filePath, {Uint8List? webFile}) async {
     try {
-      FormData formData = FormData.fromMap({
-        'ktp': await MultipartFile.fromFile(filePath),
-      });
+      FormData formData = FormData();
+
+      if (kIsWeb && webFile != null) {
+        formData.files.add(MapEntry(
+          'ktp',
+          MultipartFile.fromBytes(webFile, filename: 'ktp.png'),
+        ));
+      } else {
+        formData.files.add(MapEntry(
+          'ktp',
+          await MultipartFile.fromFile(filePath, filename: filePath.split('/').last),
+        ));
+      }
 
       var response = await Dio().post('$api/ktp',
           data: formData,
           options: Options(headers: {'Authorization': 'Bearer $token'}));
 
-      if (response.statusCode == 200 && response.data != '') {
-        return response.statusCode;
-      } else {
-        return 'Error StoreKtp';
-      }
+      return response;
     } catch (error) {
-      return error;
+      if (error is DioError) {
+        return error.response ?? error.message;
+      } else {
+        return error.toString();
+      }
     }
   }
-  Future<dynamic> saveSoap(
-    int userId,
-    int docId,
-    String subjective,
-    String objective,
-    String assessment,
-    String planning,
-    String resep,
-    String token,
-  ) async {
+
+  // Get KTP image
+  Future<dynamic> getKtp(String token) async {
     try {
-      var response = await Dio().post('$api/soap',
-          data: {
-            'user_id': userId,
-            'doc_id': docId,
-            'subjective': subjective,
-            'objective': objective,
-            'assessment': assessment,
-            'planning': planning,
-            'resep': resep
-          },
+      var response = await Dio().get('$api/ktp',
           options: Options(headers: {'Authorization': 'Bearer $token'}));
 
-      if (response.statusCode == 200 && response.data != '') {
-        return response.statusCode;
-      } else {
-        return 'Error SaveSoap';
-      }
+      return response;
     } catch (error) {
-      return error;
+      if (error is DioError) {
+        return error.response ?? error.message;
+      } else {
+        return error.toString();
+      }
     }
   }
+
+
   Future<dynamic> getSoap(int appointmentId, String token) async {
     try {
       var response = await Dio().get('$api/soap/$appointmentId',
@@ -219,6 +217,83 @@ class DioProvider {
       }
     } catch (error) {
       return error;
+    }
+  }
+
+  Future<dynamic> saveSoap(
+    int appointmentId,
+    String subjective,
+    String objective,
+    String assessment,
+    String planning,
+    String resep,
+    String token,
+  ) async {
+    try {
+      var response = await Dio().post('$api/soap',
+          data: {
+            'appoint_id': appointmentId,
+            'subjective': subjective,
+            'objective': objective,
+            'assessment': assessment,
+            'planning': planning,
+            'resep': resep
+          },
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+
+      if (response.statusCode == 200 && response.data != '') {
+        await updateAppointmentStatus(appointmentId, token);
+        return response.statusCode;
+      } else {
+        return 'Error SaveSoap';
+      }
+    } catch (error) {
+      return error;
+    }
+  }
+
+  Future<dynamic> updateAppointmentStatus(int appointmentId, String token) async {
+    try {
+      var response = await Dio().put('$api/appointments/$appointmentId/status',
+          data: {'status': 'complete'},
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+
+      if (response.statusCode == 200 && response.data != '') {
+        return response.statusCode;
+      } else {
+        return 'Error UpdateAppointmentStatus';
+      }
+    } catch (error) {
+      return error;
+    }
+  }
+  Future<dynamic> verifyUser(String token, int userId, String nik, String namaAsli, String tglLahir, String alamat, String agama, String pekerjaan) async {
+    try {
+      var response = await Dio().post('$api/admisi/verify',
+          data: {
+            'user_id': userId,
+            'nik': nik,
+            'nama_asli': namaAsli,
+            'tgl_lahir': tglLahir,
+            'alamat': alamat,
+            'agama': agama,
+            'perkerjaan': pekerjaan,
+          },
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+
+      return response.statusCode;
+    } catch (error) {
+      return 'Error';
+    }
+  }
+Future<dynamic> getUnverifiedUsers(String token) async {
+    try {
+      var response = await Dio().get('$api/admisi/unverified',
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+
+      return json.encode(response.data);
+    } catch (error) {
+      return 'Error';
     }
   }
 }
