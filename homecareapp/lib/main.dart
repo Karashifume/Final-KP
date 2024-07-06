@@ -2,8 +2,7 @@ import 'package:homecareapp/main_layout.dart';
 import 'package:homecareapp/models/auth_model.dart';
 import 'package:homecareapp/screens/auth_page.dart';
 import 'package:homecareapp/screens/tanggal_page.dart';
-import 'package:homecareapp/screens/success_booked.dart';
-import 'package:homecareapp/screens2/home_doc.dart'; // Import the home_doc.dart
+import 'package:homecareapp/screens2/home_doc.dart'; 
 import 'package:homecareapp/utils/config.dart';
 import 'package:homecareapp/screens/konsultas_booking.dart';
 import 'package:homecareapp/screens2/detail_user.dart';
@@ -28,7 +27,7 @@ class MyApp extends StatelessWidget {
       create: (context) => AuthModel(),
       child: MaterialApp(
         navigatorKey: navigatorKey,
-        title: 'Flutter Doctor App',
+        title: 'HomeCare',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           inputDecorationTheme: const InputDecorationTheme(
@@ -56,8 +55,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => const AuthPage(),
           'main': (context) => const MainLayout(),
           'tanggal_page': (context) => TanggalWaktu(),
-          'success_booking': (context) => const AppointmentBooked(),
-          'doc_dashboard': (context) => DocDash(), // Add the route for doctor dashboard
+          'doc_dashboard': (context) => DocDash(), 
           'konsultasi': (context) => const KonsultasiBooking(),
           'admisi_das': (context) => AdmisiPage(),
           'detail_user': (context) => DetailUser(schedule: ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>),

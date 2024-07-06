@@ -40,237 +40,242 @@ class _DocDashState extends State<DocDash> {
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> filteredSchedules = schedules.where((var schedule) {
-      return schedule['status'] == status.name;
-    }).toList();
+    return FutureBuilder<SharedPreferences>(
+      future: SharedPreferences.getInstance(),
+      builder: (BuildContext context, AsyncSnapshot<SharedPreferences> snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Config.primaryColor,
-        title: const Text(''),
-        leading: IconButton(
-          icon: const Icon(Icons.account_circle),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProfilePage(),
-              ),
-            );
-          },
-        ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      children: [
-                        for (FilterStatus filterStatus in FilterStatus.values)
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  status = filterStatus;
-                                  if (filterStatus == FilterStatus.upcoming) {
-                                    _alignment = Alignment.centerLeft;
-                                  } else if (filterStatus ==
-                                      FilterStatus.complete) {
-                                    _alignment = Alignment.center;
-                                  } else if (filterStatus ==
-                                      FilterStatus.cancel) {
-                                    _alignment = Alignment.centerRight;
-                                  }
-                                });
-                              },
-                              child: Center(
-                                child: Text(
-                                  filterStatus.name,
-                                  style: TextStyle(
-                                    fontSize: 14, // Reduced font size
-                                    fontWeight: status == filterStatus
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
+        final String token = snapshot.data?.getString('token') ?? '';
+
+        List<dynamic> filteredSchedules = schedules.where((var schedule) {
+          return schedule['status'] == status.name;
+        }).toList();
+
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Config.primaryColor,
+            title: const Text(''),
+            leading: IconButton(
+              icon: const Icon(Icons.account_circle),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePage(),
+                  ),
+                );
+              },
+            ),
+          ),
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Stack(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            for (FilterStatus filterStatus in FilterStatus.values)
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      status = filterStatus;
+                                      if (filterStatus == FilterStatus.upcoming) {
+                                        _alignment = Alignment.centerLeft;
+                                      } else if (filterStatus == FilterStatus.complete) {
+                                        _alignment = Alignment.center;
+                                      } else if (filterStatus == FilterStatus.cancel) {
+                                        _alignment = Alignment.centerRight;
+                                      }
+                                    });
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      filterStatus.name,
+                                      style: TextStyle(
+                                        fontSize: 14, // Reduced font size
+                                        fontWeight: status == filterStatus
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  AnimatedAlign(
-                    alignment: _alignment,
-                    duration: const Duration(milliseconds: 200),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 3,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Config.primaryColor,
-                        borderRadius: BorderRadius.circular(20),
+                          ],
+                        ),
                       ),
-                      child: Center(
-                        child: Text(
-                          status.name,
-                          style: const TextStyle(
-                            fontSize: 14, // Reduced font size
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                      AnimatedAlign(
+                        alignment: _alignment,
+                        duration: const Duration(milliseconds: 200),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 3,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Config.primaryColor,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: Text(
+                              status.name,
+                              style: const TextStyle(
+                                fontSize: 14, // Reduced font size
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-              Config.spaceSmall,
-              filteredSchedules.isEmpty
-                  ? const Center(child: Text('No appointments available'))
-                  : Expanded(
-                      child: ListView.builder(
-                        itemCount: filteredSchedules.length,
-                        itemBuilder: ((context, index) {
-                          var schedule = filteredSchedules[index];
-                          bool isLastElement =
-                              filteredSchedules.length + 1 == index;
-                          return Card(
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(
-                                color: Colors.grey,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            margin: !isLastElement
-                                ? const EdgeInsets.only(bottom: 20)
-                                : EdgeInsets.zero,
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Row(
+                  Config.spaceSmall,
+                  filteredSchedules.isEmpty
+                      ? const Center(child: Text('No appointments available'))
+                      : Expanded(
+                          child: ListView.builder(
+                            itemCount: filteredSchedules.length,
+                            itemBuilder: ((context, index) {
+                              var schedule = filteredSchedules[index];
+                              bool isLastElement = filteredSchedules.length + 1 == index;
+                              return Card(
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(
+                                    color: Colors.grey,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                margin: !isLastElement
+                                    ? const EdgeInsets.only(bottom: 20)
+                                    : EdgeInsets.zero,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: [
-                                      CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                            "http://127.0.0.1:8000${schedule['pasien_profile']}"),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      Row(
                                         children: [
-                                          Text(
-                                            schedule['pasien_name'],
-                                            style: const TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w700,
-                                            ),
+                                          CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                                "http://127.0.0.1:8000${schedule['pasien_profile']}"),
                                           ),
                                           const SizedBox(
-                                            height: 5,
+                                            width: 10,
                                           ),
-                                          Text(
-                                            schedule['category'],
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                schedule['pasien_name'],
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                schedule['category'],
+                                                style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  ScheduleCard(
-                                    date: schedule['date'],
-                                    day: schedule['day'],
-                                    time: schedule['time'],
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: OutlinedButton(
-                                          onPressed: () {
-                                            Navigator.pushNamed(
-                                              context,
-                                              'detail_user',
-                                              arguments: schedule,
-                                            );
-                                          },
-                                          child: const Text(
-                                            'Detail User',
-                                            style: TextStyle(
-                                                color: Config.primaryColor),
-                                          ),
-                                        ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      ScheduleCard(
+                                        date: schedule['date'],
+                                        day: schedule['day'],
+                                        time: schedule['time'],
                                       ),
                                       const SizedBox(
-                                        width: 20,
+                                        height: 15,
                                       ),
-                                      Expanded(
-                                        child: OutlinedButton(
-                                          style: OutlinedButton.styleFrom(
-                                            backgroundColor:
-                                                Config.primaryColor,
-                                          ),
-                                          onPressed: () {
-                                            Navigator.pushNamed(
-                                              context,
-                                              'soap_menu',
-                                              arguments: schedule,
-                                            );
-                                          },
-                                          child: Text(
-                                            schedule['status'] == 'complete'
-                                                ? 'Edit SOAP'
-                                                : 'Insert SOAP',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
+                                      if (schedule['status'] != 'complete' && schedule['status'] != 'cancel')
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: OutlinedButton(
+                                                onPressed: () {
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    'detail_user',
+                                                    arguments: schedule,
+                                                  );
+                                                },
+                                                child: const Text(
+                                                  'Detail User',
+                                                  style: TextStyle(color: Config.primaryColor),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 20,
+                                            ),
+                                            Expanded(
+                                              child: OutlinedButton(
+                                                style: OutlinedButton.styleFrom(
+                                                  backgroundColor: Config.primaryColor,
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    'soap_menu',
+                                                    arguments: schedule,
+                                                  ).then((value) async {
+                                                    await DioProvider().updateAppointmentStatus(schedule['id'], 'complete', token);
+                                                    getAppointments();
+                                                  });
+                                                },
+                                                child: Text(
+                                                  schedule['status'] == 'complete'
+                                                      ? 'Edit SOAP'
+                                                      : 'Insert SOAP',
+                                                  style: TextStyle(color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ),
-            ],
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
 class ScheduleCard extends StatelessWidget {
-  const ScheduleCard(
-      {Key? key, required this.date, required this.day, required this.time})
-      : super(key: key);
+  const ScheduleCard({Key? key, required this.date, required this.day, required this.time}) : super(key: key);
   final String date;
   final String day;
   final String time;

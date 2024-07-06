@@ -3,9 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:homecareapp/data/ktp_data.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:convert';
 
@@ -20,22 +19,22 @@ class _InsertKtpState extends State<InsertKtp> {
 
   final ImagePicker _picker = ImagePicker();
 
-  Future<void> _requestPermission() async {
-    if (!kIsWeb) {
-      final status = await Permission.camera.request();
-      if (!status.isGranted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Camera permission is required to capture images.'),
-        ));
-      }
-    }
-  }
+  // Future<void> _requestPermission() async {
+  //   if (!kIsWeb) {
+  //     final status = await Permission.camera.request();
+  //     if (!status.isGranted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //         content: Text('Camera permission is required to capture images.'),
+  //       ));
+  //     }
+  //   }
+  // }
 
   Future<void> _pickImage(ImageSource source) async {
     try {
-      if (!kIsWeb) {
-        await _requestPermission();
-      }
+      // if (!kIsWeb) {
+      //   await _requestPermission();
+      // }
 
       final pickedFile = await _picker.pickImage(source: source);
 
@@ -73,9 +72,9 @@ class _InsertKtpState extends State<InsertKtp> {
   @override
   void initState() {
     super.initState();
-    if (!kIsWeb) {
-      _requestPermission(); // Request permission on startup
-    }
+    // if (!kIsWeb) {
+    //   _requestPermission(); // Request permission on startup
+    // }
     _loadImage(); // Load saved image if any
   }
 
@@ -121,17 +120,35 @@ class _InsertKtpState extends State<InsertKtp> {
             if (_image == null && _webImage == null)
               Text('No image selected.')
             else if (kIsWeb && _webImage != null)
-              Image.memory(_webImage!)
+              Container(
+                constraints: BoxConstraints(
+                  maxWidth: 300.0, // Set maximum width
+                  maxHeight: 300.0, // Set maximum height
+                ),
+                child: Image.memory(
+                  _webImage!,
+                  fit: BoxFit.contain,
+                ),
+              )
             else if (!kIsWeb && _image != null)
-              Image.file(_image!),
+              Container(
+                constraints: BoxConstraints(
+                  maxWidth: 300.0, // Set maximum width
+                  maxHeight: 300.0, // Set maximum height
+                ),
+                child: Image.file(
+                  _image!,
+                  fit: BoxFit.contain,
+                ),
+              ),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.camera_alt, size: 50),
-                  onPressed: () => _pickImage(ImageSource.camera),
-                ),
+                // IconButton(
+                //   icon: Icon(Icons.camera_alt, size: 50),
+                //   onPressed: () => _pickImage(ImageSource.camera),
+                // ),
                 SizedBox(width: 20),
                 IconButton(
                   icon: Icon(Icons.photo_library, size: 50),

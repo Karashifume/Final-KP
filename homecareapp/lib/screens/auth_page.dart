@@ -31,11 +31,8 @@ class _AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     Config().init(context);
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 15,
-        ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -47,11 +44,17 @@ class _AuthPageState extends State<AuthPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Image.asset('assets/logorsmh.jpg', height: 40),
+                      Flexible(
+                        child: Image.asset('assets/logorsmh.jpg', height: 40),
+                      ),
                       const SizedBox(width: 10),
-                      Image.asset('assets/New Logo RSMH.png', height: 35),
-                      const SizedBox(width: 20),  // Add spacing between text and image
-                      Image.asset('assets/logo-umdp-1-300x248-2.png',height:70),
+                      Flexible(
+                        child: Image.asset('assets/New Logo RSMH.png', height: 35),
+                      ),
+                      const SizedBox(width: 20),
+                      Flexible(
+                        child: Image.asset('assets/logo-umdp-1-300x248-2.png', height: 70),
+                      ),
                     ],
                   ),
                 ),
@@ -61,7 +64,7 @@ class _AuthPageState extends State<AuthPage> {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(
                     errorMessage!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.red,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -80,7 +83,11 @@ class _AuthPageState extends State<AuthPage> {
               ),
               Config.spaceSmall,
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Color.fromARGB(255, 0, 0, 0)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(20),
                 child: isSignIn ? LoginForm(onError: handleError) : SignUpForm(),
               ),
               Config.spaceSmall,
@@ -98,8 +105,7 @@ class _AuthPageState extends State<AuthPage> {
                     ),
                   ),
                 ),
-              const Spacer(),
-              Config.spaceSmall,
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[

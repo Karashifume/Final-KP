@@ -20,16 +20,13 @@ class SoapController extends Controller
                 'resep' => $request->get('resep')
             ]
         );
-
         return response()->json([
             'success' => 'SOAP has been saved successfully!',
         ], 200);
     }
-
     public function show($id)
     {
         $soap = Soap::where('appoint_id', $id)->first();
-
         if ($soap) {
             return response()->json($soap, 200);
         } else {

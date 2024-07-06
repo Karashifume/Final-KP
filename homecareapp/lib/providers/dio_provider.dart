@@ -242,7 +242,7 @@ class DioProvider {
           options: Options(headers: {'Authorization': 'Bearer $token'}));
 
       if (response.statusCode == 200 && response.data != '') {
-        await updateAppointmentStatus(appointmentId, token);
+        // await updateAppointmentStatus(appointmentId, token);
         return response.statusCode;
       } else {
         return 'Error SaveSoap';
@@ -252,10 +252,10 @@ class DioProvider {
     }
   }
 
-  Future<dynamic> updateAppointmentStatus(int appointmentId, String token) async {
+  Future<dynamic> updateAppointmentStatus(int appointmentId, String status, String token) async {
     try {
       var response = await Dio().put('$api/appointments/$appointmentId/status',
-          data: {'status': 'complete'},
+          data: {'status': status},
           options: Options(headers: {'Authorization': 'Bearer $token'}));
 
       if (response.statusCode == 200 && response.data != '') {
@@ -267,6 +267,21 @@ class DioProvider {
       return error;
     }
   }
+  Future<dynamic> updateAppointmentDetails(int appointmentId, String date, String day, String time, String token) async {
+  try {
+    var response = await Dio().put('$api/appointments/$appointmentId/details',
+        data: {'date': date, 'day': day, 'time': time},
+        options: Options(headers: {'Authorization': 'Bearer $token'}));
+
+    if (response.statusCode == 200 && response.data != '') {
+      return response.statusCode;
+    } else {
+      return 'Error UpdateAppointmentDetails';
+    }
+  } catch (error) {
+    return error;
+  }
+}
   Future<dynamic> verifyUser(String token, int userId, String nik, String namaAsli, String tglLahir, String alamat, String agama, String pekerjaan) async {
     try {
       var response = await Dio().post('$api/admisi/verify',
@@ -296,4 +311,19 @@ Future<dynamic> getUnverifiedUsers(String token) async {
       return 'Error';
     }
   }
+  Future<dynamic> getPasienDetails(String token, int userId) async {
+    try {
+      var response = await Dio().get('$api/pasien/details/$userId',
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+
+      return response;
+    } catch (error) {
+      if (error is DioError) {
+        return error.response ?? error.message;
+      } else {
+        return error.toString();
+      }
+    }
+  }
+  
 }

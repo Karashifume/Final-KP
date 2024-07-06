@@ -1,16 +1,15 @@
-import 'dart:convert';
+// import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:homecareapp/components/doctor_card.dart';
 import 'package:homecareapp/data/ktp_data.dart';
 import 'package:homecareapp/models/auth_model.dart';
 import 'package:homecareapp/screens/konsultas_booking.dart';
-import 'package:homecareapp/screens/appointment_page.dart';
 import 'package:homecareapp/utils/config.dart';
 import 'package:homecareapp/screens/insert_ktp.dart';
 import 'package:flutter/material.dart';
-import 'package:homecareapp/providers/dio_provider.dart';
+// import 'package:homecareapp/providers/dio_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -32,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadKtpData() async {
-      if (kIsWeb) {
+    if (kIsWeb) {
       String? base64Image = await KtpData.getImageBase64();
       if (base64Image != null) {
         setState(() {
@@ -164,30 +163,6 @@ class _HomePageState extends State<HomePage> {
                               Text('Konsultasi'),
                             ],
                           ),
-                          // Column(
-                          //   children: [
-                          //     GestureDetector(
-                          //       onTap: () {
-                          //         Navigator.push(
-                          //           context,
-                          //           MaterialPageRoute(
-                          //               builder: (context) =>
-                          //                   AppointmentPage()),
-                          //         );
-                          //       },
-                          //       child: CircleAvatar(
-                          //         radius: 30,
-                          //         backgroundColor: Color(0xFF69F0AE),
-                          //         child: Icon(
-                          //           Icons.calendar_today,
-                          //           color: Colors.white,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     SizedBox(height: 10),
-                          //     Text('Jadwal'),
-                          //   ],
-                          // ),
                         ],
                       ),
                       Config.spaceSmall,
@@ -207,6 +182,7 @@ class _HomePageState extends State<HomePage> {
                               doctor: user['doctor'][index],
                               //if lates fav list contains particular doctor id, then show fav icon
                               isFav: favList.contains(user['doctor'][index]['doc_id']),
+                              showSelectButton: false, // Disable the button for homepage
                               isClickable: false, // Disable clickable for homepage
                             );
                           },

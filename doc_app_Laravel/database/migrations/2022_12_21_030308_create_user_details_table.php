@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create('pasien', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->unique();
-            $table->binary('ktp')->nullable();
+            $table->string('ktp')->nullable();
             $table->string('status')->nullable();
             $table->string('nik')->nullable();
             $table->string('nama_asli')->nullable();
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('alamat')->nullable();
             $table->string('agama')->nullable();
             $table->string('perkerjaan')->nullable();
+            $table->boolean('verified')->default(false);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

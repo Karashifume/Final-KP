@@ -59,6 +59,11 @@ class PasienController extends Controller
 
         return response()->json(['message' => 'No KTP image found.'], 404);
     }
+    public function showPasienDetails($userId)
+{
+    $pasien = Pasien::where('user_id', $userId)->with('user')->firstOrFail();
+    return response()->json($pasien, 200);
+}
 
     // Add a method for admisi to verify user data
     // public function verifyUser(Request $request, $id)

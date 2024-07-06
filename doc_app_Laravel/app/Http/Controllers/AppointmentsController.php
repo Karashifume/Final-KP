@@ -79,7 +79,7 @@ class AppointmentsController extends Controller
     $appointment->date = $request->get('date');
     $appointment->day = $request->get('day');
     $appointment->time = $request->get('time');
-    $appointment->status = 'upcoming'; //new appointment will be saved as 'upcoming' by default
+    $appointment->status = 'upcoming'; 
     $appointment->keluhan = $request->get('keluhan');
     $appointment->alamat = $request->get('alamat');
     $appointment->harga = 250000; 
@@ -87,6 +87,29 @@ class AppointmentsController extends Controller
 
     return response()->json(['success' => 'New Appointment has been made successfully!'], 200);
 }
+public function updateStatus(Request $request, $id)
+    {
+        $appointment = Appointments::find($id);
+        if ($appointment) {
+            $appointment->status = $request->get('status');
+            $appointment->save();
+            return response()->json(['success' => 'Appointment status updated successfully!'], 200);
+        }
+        return response()->json(['error' => 'Appointment not found'], 404);
+    }
+    public function updateDetails(Request $request, $id)
+{
+    $appointment = Appointments::find($id);
+    if ($appointment) {
+        $appointment->date = $request->get('date');
+        $appointment->day = $request->get('day');
+        $appointment->time = $request->get('time');
+        $appointment->save();
+        return response()->json(['success' => 'Appointment details updated successfully!'], 200);
+    }
+    return response()->json(['error' => 'Appointment not found'], 404);
+}
+
 
 
     /**

@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/soap/{id}', [SoapController::class, 'show']);
     Route::get('/admisi/unverified', [AdmisiController::class, 'getUnverifiedUsers']);
     Route::post('/admisi/verify', [AdmisiController::class, 'verifyUser']);
+    Route::get('/pasien/details/{user_id}', [PasienController::class, 'showPasienDetails']);
+    Route::put('/appointments/{id}/status', [AppointmentsController::class, 'updateStatus']);
+    Route::put('/appointments/{id}/details', [AppointmentsController::class, 'updateDetails']);
 });
-
-

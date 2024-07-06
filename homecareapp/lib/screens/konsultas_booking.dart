@@ -56,34 +56,34 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
   }
 
   Future<void> _bookAppointment() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token') ?? '';
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final token = prefs.getString('token') ?? '';
 
-    if (_keluhanController.text.isEmpty ||
-        selectedDoctor == null ||
-        selectedDate == null ||
-        selectedTime == null ||
-        _alamatController.text.isEmpty) {
-      _showConsultationPopup('Semua kolom harus diisi.');
-      return;
-    }
-
-    final result = await DioProvider().bookAppointment(
-      selectedDate!,
-      selectedDay!,
-      selectedTime!,
-      selectedDoctor!['doc_id'],
-      _keluhanController.text,
-      _alamatController.text,
-      token,
-    );
-
-    if (result == 200) {
-      Navigator.of(context).pushReplacementNamed('main');
-    } else {
-      _showConsultationPopup('Terjadi kesalahan saat memesan konsultasi.');
-    }
+  if (_keluhanController.text.isEmpty ||
+      selectedDoctor == null ||
+      selectedDate == null ||
+      selectedTime == null ||
+      _alamatController.text.isEmpty) {
+    _showConsultationPopup('Semua kolom harus diisi.');
+    return;
   }
+
+  final result = await DioProvider().bookAppointment(
+    selectedDate!,
+    selectedDay!,
+    selectedTime!,
+    selectedDoctor!['doc_id'],
+    _keluhanController.text,
+    _alamatController.text,
+    token,
+  );
+
+  if (result == 200) {
+    Navigator.of(context).pushReplacementNamed('main');
+  } else {
+    _showConsultationPopup('Terjadi kesalahan saat memesan konsultasi.');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +91,7 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
     final arguments = ModalRoute.of(context)?.settings.arguments as Map?;
     if (arguments != null) {
       final doctor = arguments['doctor'];
-      final isFav = arguments['isFav'] ?? false;
+      // final isFav = arguments['isFav'] ?? false;
       selectedDoctor = doctor;
     }
 
@@ -166,14 +166,18 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
                         fontSize: 18,
                       ),
                     ),
-                    Icon(Icons.arrow_drop_down),
+                    Icon(Icons.arrow_forward_outlined),
                   ],
                 ),
               ),
             ),
             SizedBox(height: 10),
             if (selectedDoctor != null)
-              DoctorCard(doctor: selectedDoctor!, isFav: arguments?['isFav'] ?? false),
+              DoctorCard(
+                doctor: selectedDoctor!,
+                isFav: arguments?['isFav'] ?? false,
+                showSelectButton: false, // Hide the select button here
+              ),
             SizedBox(height: 20),
             GestureDetector(
               onTap: () async {
@@ -200,7 +204,7 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
                         fontSize: 18,
                       ),
                     ),
-                    Icon(Icons.arrow_drop_down),
+                    Icon(Icons.arrow_forward_outlined),
                   ],
                 ),
               ),

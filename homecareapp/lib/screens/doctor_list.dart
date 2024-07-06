@@ -59,6 +59,7 @@ class _DoctorListState extends State<DoctorList> {
                               user['doctor'][index]['doc_id'],
                             ),
                             isClickable: true,
+                            showSelectButton: true, // Show the select button here
                           );
                         }),
                       ),

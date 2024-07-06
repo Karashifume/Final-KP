@@ -1,4 +1,3 @@
-import 'package:homecareapp/main.dart';
 import 'package:homecareapp/screens/doctor_details.dart';
 import 'package:homecareapp/utils/config.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +8,13 @@ class DoctorCard extends StatelessWidget {
     required this.doctor,
     required this.isFav,
     this.isClickable = true,
-    this.showSelectButton = true,
+    this.showSelectButton = true, // Added this parameter
   }) : super(key: key);
 
   final Map<String, dynamic> doctor;
   final bool isFav;
   final bool isClickable;
-  final bool showSelectButton;
+  final bool showSelectButton; // Added this field
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +93,7 @@ class DoctorCard extends StatelessWidget {
               ),
             ),
             // Select Doctor Button
-            if (showSelectButton)
+            if (showSelectButton) // Show the button conditionally
               IconButton(
                 icon: Icon(Icons.check_circle),
                 onPressed: isClickable
