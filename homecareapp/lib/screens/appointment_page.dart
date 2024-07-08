@@ -252,6 +252,44 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                             ),
                                           ),
                                         ],
+                                      )
+                                    else if (schedule['status'] == 'complete')
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: OutlinedButton(
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  'view_medrec',
+                                                  arguments: schedule['id'],
+                                                  );
+                                              },
+                                              child: const Text(
+                                                'Lihat Hasil Diagnosa',
+                                                style: TextStyle(color: Config.primaryColor),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 20,
+                                          ),
+                                          Expanded(
+                                            child: OutlinedButton(
+                                              style: OutlinedButton.styleFrom(
+                                                backgroundColor: Config.primaryColor,
+                                              ),
+                                              onPressed: () {
+                                                // Navigator to Beri Rating page (To be implemented)
+                                              },
+                                              child: const Text(
+                                                'Beri Rating',
+                                                style: TextStyle(color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                   ],
                                 ),

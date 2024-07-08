@@ -2,7 +2,7 @@ import 'package:homecareapp/main_layout.dart';
 import 'package:homecareapp/models/auth_model.dart';
 import 'package:homecareapp/screens/auth_page.dart';
 import 'package:homecareapp/screens/tanggal_page.dart';
-import 'package:homecareapp/screens2/home_doc.dart'; 
+import 'package:homecareapp/screens2/home_doc.dart';
 import 'package:homecareapp/utils/config.dart';
 import 'package:homecareapp/screens/konsultas_booking.dart';
 import 'package:homecareapp/screens2/detail_user.dart';
@@ -55,12 +55,12 @@ class MyApp extends StatelessWidget {
           '/': (context) => const AuthPage(),
           'main': (context) => const MainLayout(),
           'tanggal_page': (context) => TanggalWaktu(),
-          'doc_dashboard': (context) => DocDash(), 
+          'doc_dashboard': (context) => const DocDash(),
           'konsultasi': (context) => const KonsultasiBooking(),
           'admisi_das': (context) => AdmisiPage(),
           'detail_user': (context) => DetailUser(schedule: ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>),
           'soap_menu': (context) => SoapPage(schedule: ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>),
-          'view_medrec': (context) => ViewMedRec(soapData: ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>),
+          'view_medrec': (context) => ViewMedRec(appointmentId: ModalRoute.of(context)?.settings.arguments as int),
         },
       ),
     );

@@ -210,53 +210,54 @@ class _DocDashState extends State<DocDash> {
                                       const SizedBox(
                                         height: 15,
                                       ),
-                                      if (schedule['status'] != 'complete' && schedule['status'] != 'cancel')
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(
-                                              child: OutlinedButton(
-                                                onPressed: () {
-                                                  Navigator.pushNamed(
-                                                    context,
-                                                    'detail_user',
-                                                    arguments: schedule,
-                                                  );
-                                                },
-                                                child: const Text(
-                                                  'Detail User',
-                                                  style: TextStyle(color: Config.primaryColor),
-                                                ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: OutlinedButton(
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  'detail_user',
+                                                  arguments: schedule,
+                                                );
+                                              },
+                                              child: const Text(
+                                                'Detail User',
+                                                style: TextStyle(color: Config.primaryColor),
                                               ),
                                             ),
-                                            const SizedBox(
-                                              width: 20,
-                                            ),
-                                            Expanded(
-                                              child: OutlinedButton(
-                                                style: OutlinedButton.styleFrom(
-                                                  backgroundColor: Config.primaryColor,
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.pushNamed(
-                                                    context,
-                                                    'soap_menu',
-                                                    arguments: schedule,
-                                                  ).then((value) async {
+                                          ),
+                                          const SizedBox(
+                                            width: 20,
+                                          ),
+                                          Expanded(
+                                            child: OutlinedButton(
+                                              style: OutlinedButton.styleFrom(
+                                                backgroundColor: Config.primaryColor,
+                                              ),
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  'soap_menu',
+                                                  arguments: schedule,
+                                                ).then((value) async {
+                                                  if (schedule['status'] != 'complete') {
                                                     await DioProvider().updateAppointmentStatus(schedule['id'], 'complete', token);
                                                     getAppointments();
-                                                  });
-                                                },
-                                                child: Text(
-                                                  schedule['status'] == 'complete'
-                                                      ? 'Edit SOAP'
-                                                      : 'Insert SOAP',
-                                                  style: TextStyle(color: Colors.white),
-                                                ),
+                                                  }
+                                                });
+                                              },
+                                              child: Text(
+                                                schedule['status'] == 'complete'
+                                                    ? 'Edit SOAP'
+                                                    : 'Insert SOAP',
+                                                style: const TextStyle(color: Colors.white),
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -330,3 +331,4 @@ class ScheduleCard extends StatelessWidget {
     );
   }
 }
+  

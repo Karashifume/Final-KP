@@ -65,24 +65,23 @@ class DioProvider {
   }
 }
 
-
-  //store booking detail
   Future<dynamic> bookAppointment(
-      String date, String day, String time, int doctor, String keluhan, String alamat, String token) async {
-    try {
-      var response = await Dio().post('$api/book',
-          data: {'date': date, 'day': day, 'time': time, 'doctor_id': doctor, 'alamat': alamat, 'keluhan': keluhan},
-          options: Options(headers: {'Authorization': 'Bearer $token'}));
+    String date, String day, String time, int doctor, String keluhan, String alamat, String token, String harga) async {
+  try {
+    var response = await Dio().post('$api/book',
+        data: {'date': date, 'day': day, 'time': time, 'doctor_id': doctor, 'alamat': alamat, 'keluhan': keluhan, 'harga': harga},
+        options: Options(headers: {'Authorization': 'Bearer $token'}));
 
-      if (response.statusCode == 200 && response.data != '') {
-        return response.statusCode;
-      } else {
-        return 'Error BookAppointment';
-      }
-    } catch (error) {
-      return error;
+    if (response.statusCode == 200 && response.data != '') {
+      return response.statusCode;
+    } else {
+      return 'Error BookAppointment';
     }
+  } catch (error) {
+    return error;
   }
+}
+
 
   //retrieve booking details
   Future<dynamic> getAppointments(String token) async {
@@ -117,25 +116,6 @@ class DioProvider {
         return response.statusCode;
       } else {
         return 'Error StoreReview';
-      }
-    } catch (error) {
-      return error;
-    }
-  }
-
-  //store fav doctor
-  Future<dynamic> storeFavDoc(String token, List<dynamic> favList) async {
-    try {
-      var response = await Dio().post('$api/fav',
-          data: {
-            'favList': favList,
-          },
-          options: Options(headers: {'Authorization': 'Bearer $token'}));
-
-      if (response.statusCode == 200 && response.data != '') {
-        return response.statusCode;
-      } else {
-        return 'Error StoreFavDoc';
       }
     } catch (error) {
       return error;
@@ -188,7 +168,6 @@ class DioProvider {
     }
   }
 
-  // Get KTP image
   Future<dynamic> getKtp(String token) async {
     try {
       var response = await Dio().get('$api/ktp',
@@ -203,7 +182,6 @@ class DioProvider {
       }
     }
   }
-
 
   Future<dynamic> getSoap(int appointmentId, String token) async {
     try {

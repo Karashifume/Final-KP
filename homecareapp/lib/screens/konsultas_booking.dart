@@ -20,6 +20,9 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
   String? selectedDate;
   String? selectedDay;
   String? selectedTime;
+  String? selectedHarga;
+
+  final List<int> hargaList = [250000, 500000, 750000, 1000000];
 
   void _showConsultationPopup(String message) {
     showDialog(
@@ -56,34 +59,36 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
   }
 
   Future<void> _bookAppointment() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('token') ?? '';
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token') ?? '';
 
-  if (_keluhanController.text.isEmpty ||
-      selectedDoctor == null ||
-      selectedDate == null ||
-      selectedTime == null ||
-      _alamatController.text.isEmpty) {
-    _showConsultationPopup('Semua kolom harus diisi.');
-    return;
+    if (_keluhanController.text.isEmpty ||
+        selectedDoctor == null ||
+        selectedDate == null ||
+        selectedTime == null ||
+        _alamatController.text.isEmpty ||
+        selectedHarga == null) {
+      _showConsultationPopup('Semua kolom harus diisi.');
+      return;
+    }
+
+    final result = await DioProvider().bookAppointment(
+      selectedDate!,
+      selectedDay!,
+      selectedTime!,
+      selectedDoctor!['doc_id'],
+      _keluhanController.text,
+      _alamatController.text,
+      token,
+      selectedHarga!,
+    );
+
+    if (result == 200) {
+      Navigator.of(context).pushReplacementNamed('main');
+    } else {
+      _showConsultationPopup('Terjadi kesalahan saat memesan konsultasi.');
+    }
   }
-
-  final result = await DioProvider().bookAppointment(
-    selectedDate!,
-    selectedDay!,
-    selectedTime!,
-    selectedDoctor!['doc_id'],
-    _keluhanController.text,
-    _alamatController.text,
-    token,
-  );
-
-  if (result == 200) {
-    Navigator.of(context).pushReplacementNamed('main');
-  } else {
-    _showConsultationPopup('Terjadi kesalahan saat memesan konsultasi.');
-  }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +96,6 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
     final arguments = ModalRoute.of(context)?.settings.arguments as Map?;
     if (arguments != null) {
       final doctor = arguments['doctor'];
-      // final isFav = arguments['isFav'] ?? false;
       selectedDoctor = doctor;
     }
 
@@ -255,14 +259,33 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
                 border: Border.all(color: Color(0xFF69F0AE)),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Harga: Rp.250.000',
+                    'Harga Service',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF69F0AE),
                     ),
+                  ),
+                  SizedBox(height: 10),
+                  DropdownButton<int>(
+                    value: selectedHarga != null ? int.parse(selectedHarga!) : null,
+                    hint: Text('Pilih Harga'),
+                    isExpanded: true,
+                    items: hargaList.map((int value) {
+                      return DropdownMenuItem<int>(
+                        value: value,
+                        child: Text('Rp. $value'),
+                      );
+                    }).toList(),
+                    onChanged: (int? newValue) {
+                      setState(() {
+                        selectedHarga = newValue.toString();
+                      });
+                    },
                   ),
                 ],
               ),

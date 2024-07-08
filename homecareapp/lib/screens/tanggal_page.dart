@@ -1,7 +1,6 @@
 import 'package:homecareapp/components/button.dart';
-import 'package:homecareapp/main.dart';
 import 'package:homecareapp/models/booking_datetime_converted.dart';
-import 'package:homecareapp/providers/dio_provider.dart';
+// import 'package:homecareapp/providers/dio_provider.dart';
 import 'package:homecareapp/utils/config.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

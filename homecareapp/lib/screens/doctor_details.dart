@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:homecareapp/components/button.dart';
-import 'package:homecareapp/models/auth_model.dart';
 import 'package:homecareapp/utils/config.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 
 class DoctorDetails extends StatefulWidget {
   const DoctorDetails({Key? key, required this.doctor, required this.isFav})

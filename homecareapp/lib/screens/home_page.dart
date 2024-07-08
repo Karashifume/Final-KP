@@ -1,4 +1,4 @@
-// import 'dart:convert';
+// home_page.dart
 import 'package:flutter/foundation.dart';
 import 'package:homecareapp/components/doctor_card.dart';
 import 'package:homecareapp/data/ktp_data.dart';
@@ -7,9 +7,9 @@ import 'package:homecareapp/screens/konsultas_booking.dart';
 import 'package:homecareapp/utils/config.dart';
 import 'package:homecareapp/screens/insert_ktp.dart';
 import 'package:flutter/material.dart';
-// import 'package:homecareapp/providers/dio_provider.dart';
 import 'package:provider/provider.dart';
-
+import 'package:homecareapp/providers/dio_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,28 +23,35 @@ class _HomePageState extends State<HomePage> {
   Map<String, dynamic> doctor = {};
   List<dynamic> favList = [];
   bool _isKtpVerified = false;
+  String? _token;
 
   @override
   void initState() {
     super.initState();
+    _loadToken();
     _loadKtpData();
   }
 
+  Future<void> _loadToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _token = prefs.getString('token');
+    });
+  }
+
   Future<void> _loadKtpData() async {
-    if (kIsWeb) {
-      String? base64Image = await KtpData.getImageBase64();
-      if (base64Image != null) {
-        setState(() {
-          _isKtpVerified = true;
-        });
-      }
+    if (_token == null) return;
+
+    var response = await DioProvider().getKtp(_token!);
+
+    if (response.statusCode == 200 && response.data != null) {
+      setState(() {
+        _isKtpVerified = true;
+      });
     } else {
-      String? imagePath = await KtpData.getImagePath();
-      if (imagePath != null) {
-        setState(() {
-          _isKtpVerified = true;
-        });
-      }
+      setState(() {
+        _isKtpVerified = false;
+      });
     }
   }
 

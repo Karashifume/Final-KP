@@ -82,7 +82,7 @@ class AppointmentsController extends Controller
     $appointment->status = 'upcoming'; 
     $appointment->keluhan = $request->get('keluhan');
     $appointment->alamat = $request->get('alamat');
-    $appointment->harga = 250000; 
+    $appointment->harga = $request->get('harga'); 
     $appointment->save();
 
     return response()->json(['success' => 'New Appointment has been made successfully!'], 200);

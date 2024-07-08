@@ -30,8 +30,9 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/user', [UsersController::class, 'index']);
     Route::post('/fav', [UsersController::class, 'storeFavDoc']);
     Route::post('/logout', [UsersController::class, 'logout']);
-    Route::post('/ktp', [PasienController::class, 'store']);
-    Route::get('/ktp', [PasienController::class, 'show']);
+    Route::post('/ktp', [PasienController::class, 'storeKtp']);
+    Route::get('/ktp', [PasienController::class, 'showKtp']);
+    Route::get('/pasien/details/{user_id}', [PasienController::class, 'showPasienDetails']);
     Route::post('/book', [AppointmentsController::class, 'store']);
     Route::post('/reviews', [DocsController::class, 'store']);
     Route::get('/appointments', [AppointmentsController::class, 'index']);
@@ -41,7 +42,6 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/soap/{id}', [SoapController::class, 'show']);
     Route::get('/admisi/unverified', [AdmisiController::class, 'getUnverifiedUsers']);
     Route::post('/admisi/verify', [AdmisiController::class, 'verifyUser']);
-    Route::get('/pasien/details/{user_id}', [PasienController::class, 'showPasienDetails']);
     Route::put('/appointments/{id}/status', [AppointmentsController::class, 'updateStatus']);
     Route::put('/appointments/{id}/details', [AppointmentsController::class, 'updateDetails']);
 });

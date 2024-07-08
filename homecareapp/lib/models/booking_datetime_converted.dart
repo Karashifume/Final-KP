@@ -9,19 +9,19 @@ class DateConverted {
   static String getDay(int day) {
     switch (day) {
       case 1:
-        return 'Monday';
+        return 'Senin';
       case 2:
-        return 'Tuesday';
+        return 'Selasa';
       case 3:
-        return 'Wednesday';
+        return 'Rabu';
       case 4:
-        return 'Thursday';
+        return 'Kamis';
       case 5:
-        return 'Friday';
+        return "Jum'at";
       case 6:
-        return 'Saturday';
+        return 'Sabtu';
       case 7:
-        return 'Sunday';
+        return 'Minggu';
       default:
         return 'Sunday';
     }

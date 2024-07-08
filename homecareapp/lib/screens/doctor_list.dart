@@ -4,7 +4,7 @@ import 'package:homecareapp/models/auth_model.dart';
 import 'package:homecareapp/utils/config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:homecareapp/screens/doctor_details.dart';
+
 
 class DoctorList extends StatefulWidget {
   const DoctorList({Key? key}) : super(key: key);
