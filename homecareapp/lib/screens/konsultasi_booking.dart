@@ -10,19 +10,16 @@ class KonsultasiBooking extends StatefulWidget {
   const KonsultasiBooking({Key? key}) : super(key: key);
 
   @override
-  _KonsultasiTanggalWaktuState createState() => _KonsultasiTanggalWaktuState();
+  _KonsultasiBookingState createState() => _KonsultasiBookingState();
 }
 
-class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
+class _KonsultasiBookingState extends State<KonsultasiBooking> {
   final _keluhanController = TextEditingController();
   final _alamatController = TextEditingController();
   Map<String, dynamic>? selectedDoctor;
   String? selectedDate;
   String? selectedDay;
   String? selectedTime;
-  String? selectedHarga;
-
-  final List<int> hargaList = [250000, 500000, 750000, 1000000];
 
   void _showConsultationPopup(String message) {
     showDialog(
@@ -66,8 +63,7 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
         selectedDoctor == null ||
         selectedDate == null ||
         selectedTime == null ||
-        _alamatController.text.isEmpty ||
-        selectedHarga == null) {
+        _alamatController.text.isEmpty) {
       _showConsultationPopup('Semua kolom harus diisi.');
       return;
     }
@@ -80,7 +76,7 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
       _keluhanController.text,
       _alamatController.text,
       token,
-      selectedHarga!,
+      selectedDoctor!['harga'].toString(),
     );
 
     if (result == 200) {
@@ -116,6 +112,7 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
+              width: double.infinity,
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 border: Border.all(color: Color(0xFF69F0AE)),
@@ -156,6 +153,7 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
                 }
               },
               child: Container(
+                width: double.infinity,
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(color: Color(0xFF69F0AE)),
@@ -180,7 +178,7 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
               DoctorCard(
                 doctor: selectedDoctor!,
                 isFav: arguments?['isFav'] ?? false,
-                showSelectButton: false, // Hide the select button here
+                showSelectButton: false,
               ),
             SizedBox(height: 20),
             GestureDetector(
@@ -194,6 +192,7 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
                 }
               },
               child: Container(
+                width: double.infinity,
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(color: Color(0xFF69F0AE)),
@@ -224,6 +223,7 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
               ),
             SizedBox(height: 20),
             Container(
+              width: double.infinity,
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 border: Border.all(color: Color(0xFF69F0AE)),
@@ -254,6 +254,7 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
             ),
             SizedBox(height: 20),
             Container(
+              width: double.infinity,
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 border: Border.all(color: Color(0xFF69F0AE)),
@@ -271,21 +272,11 @@ class _KonsultasiTanggalWaktuState extends State<KonsultasiBooking> {
                     ),
                   ),
                   SizedBox(height: 10),
-                  DropdownButton<int>(
-                    value: selectedHarga != null ? int.parse(selectedHarga!) : null,
-                    hint: Text('Pilih Harga'),
-                    isExpanded: true,
-                    items: hargaList.map((int value) {
-                      return DropdownMenuItem<int>(
-                        value: value,
-                        child: Text('Rp. $value'),
-                      );
-                    }).toList(),
-                    onChanged: (int? newValue) {
-                      setState(() {
-                        selectedHarga = newValue.toString();
-                      });
-                    },
+                  Text(
+                    'Rp. ${selectedDoctor != null ? selectedDoctor!['harga'] : 0}',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
                   ),
                 ],
               ),

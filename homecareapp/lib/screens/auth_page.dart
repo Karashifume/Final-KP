@@ -90,21 +90,21 @@ class _AuthPageState extends State<AuthPage> {
                 padding: const EdgeInsets.all(20),
                 child: isSignIn ? LoginForm(onError: handleError) : SignUpForm(),
               ),
-              Config.spaceSmall,
-              if (isSignIn)
-                Center(
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      AppText.enText['forgot-password']!,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
+              // Config.spaceSmall,
+              // if (isSignIn)
+              //   Center(
+              //     child: TextButton(
+              //       onPressed: () {},
+              //       child: Text(
+              //         AppText.enText['forgot-password']!,
+              //         style: const TextStyle(
+              //           fontSize: 16,
+              //           fontWeight: FontWeight.bold,
+              //           color: Colors.black,
+              //         ),
+              //       ),
+              //     ),
+              //   ),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -32,7 +32,6 @@ class PasienController extends Controller {
     return response()->json(['message' => 'No KTP image provided.'], 400);
 }
 
-
 public function showKtp()
 {
     $user = Auth::user();
@@ -46,8 +45,10 @@ public function showKtp()
 }
 
 
-    public function showPasienDetails($userId) {
-        $pasien = Pasien::where('user_id', $userId)->with('user')->firstOrFail();
-        return response()->json($pasien, 200);
-    }
+
+
+public function showPasienDetails($userId) {
+    $pasien = Pasien::where('user_id', $userId)->with('user')->firstOrFail();
+    return response()->json($pasien, 200);
+}
 }

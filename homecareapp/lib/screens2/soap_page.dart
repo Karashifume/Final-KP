@@ -1,5 +1,3 @@
-// soap_page.dart
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:homecareapp/providers/dio_provider.dart';
@@ -55,7 +53,7 @@ class _SoapPageState extends State<SoapPage> {
             TextButton(
               child: Text('OK'),
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed('doc_dashboard');
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -90,6 +88,7 @@ class _SoapPageState extends State<SoapPage> {
     if (result == 200) {
       _showPopup('SOAP berhasil Disimpan');
       await DioProvider().updateAppointmentStatus(widget.schedule['id'], 'complete', token);
+      Navigator.of(context).pushReplacementNamed('doc_dashboard');
     } else {
       _showPopup('Terjadi kesalahan saat menyimpan SOAP');
     }

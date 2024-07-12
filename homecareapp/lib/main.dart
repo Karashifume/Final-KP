@@ -4,7 +4,7 @@ import 'package:homecareapp/screens/auth_page.dart';
 import 'package:homecareapp/screens/tanggal_page.dart';
 import 'package:homecareapp/screens2/home_doc.dart';
 import 'package:homecareapp/utils/config.dart';
-import 'package:homecareapp/screens/konsultas_booking.dart';
+import 'package:homecareapp/screens/konsultasi_booking.dart';
 import 'package:homecareapp/screens2/detail_user.dart';
 import 'package:homecareapp/screens2/soap_page.dart';
 import 'package:homecareapp/screens2/view_medrec.dart';
@@ -13,7 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

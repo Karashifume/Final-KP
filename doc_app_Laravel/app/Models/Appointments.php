@@ -19,6 +19,7 @@ class Appointments extends Model
         'keluhan',
         'alamat',
         'harga',
+        'alasan',
     ];
 
     public function user(){

@@ -3,9 +3,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:homecareapp/providers/dio_provider.dart';
+import 'package:homecareapp/data/ktp_data.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class InsertKtp extends StatefulWidget {
   @override
@@ -15,24 +15,8 @@ class InsertKtp extends StatefulWidget {
 class _InsertKtpState extends State<InsertKtp> {
   File? _image;
   Uint8List? _webImage; // Store Uint8List for web
-  String? _imageUrl; // Store image URL for web
-  String? _token;
 
   final ImagePicker _picker = ImagePicker();
-
-  @override
-  void initState() {
-    super.initState();
-    _loadToken();
-    _loadImage();
-  }
-
-  Future<void> _loadToken() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _token = prefs.getString('token');
-    });
-  }
 
   Future<void> _pickImage(ImageSource source) async {
     try {
@@ -40,15 +24,22 @@ class _InsertKtpState extends State<InsertKtp> {
 
       if (pickedFile != null) {
         if (kIsWeb) {
+          // Handle web image
           final bytes = await pickedFile.readAsBytes();
+          String base64Image = base64Encode(bytes);
+          await KtpData.saveImageBase64(base64Image);
+
           setState(() {
             _webImage = bytes;
           });
         } else {
+          // Handle mobile image
           final directory = await getApplicationDocumentsDirectory();
           final filePath = '${directory.path}/${pickedFile.name}';
           final file = File(filePath);
           await file.writeAsBytes(await pickedFile.readAsBytes());
+
+          await KtpData.saveImagePath(filePath);
 
           setState(() {
             _image = file;
@@ -62,41 +53,41 @@ class _InsertKtpState extends State<InsertKtp> {
     }
   }
 
-  Future<void> _saveImage() async {
-    if (_token == null) return;
+  @override
+  void initState() {
+    super.initState();
+    _loadImage(); // Load saved image if any
+  }
 
-    var response;
-    if (kIsWeb && _webImage != null) {
-      response = await DioProvider().storeKtp(_token!, '', webFile: _webImage);
-    } else if (_image != null) {
-      response = await DioProvider().storeKtp(_token!, _image!.path);
+  Future<void> _loadImage() async {
+    if (kIsWeb) {
+      String? base64Image = await KtpData.getImageBase64();
+      if (base64Image != null) {
+        setState(() {
+          _webImage = base64Decode(base64Image);
+        });
+      }
+    } else {
+      String? imagePath = await KtpData.getImagePath();
+      if (imagePath != null) {
+        setState(() {
+          _image = File(imagePath);
+        });
+      }
     }
+  }
 
-    if (response.statusCode == 200) {
+  Future<void> _saveImage() async {
+    // Save the image and navigate to the main page
+    if (_image != null || _webImage != null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Image uploaded successfully!'),
+        content: Text('Foto Berhasil DiSimpan'),
       ));
       Navigator.of(context).pushReplacementNamed('main');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to upload image.'),
+        content: Text('No image to save.'),
       ));
-    }
-  }
-
-  Future<void> _loadImage() async {
-    if (_token == null) return;
-
-    var response = await DioProvider().getKtp(_token!);
-
-    if (response.statusCode == 200 && response.data != null) {
-      setState(() {
-        if (kIsWeb) {
-          _imageUrl = response.data['ktp']; // This is a URL for the web
-        } else {
-          // Handle mobile case if necessary
-        }
-      });
     }
   }
 
@@ -110,35 +101,24 @@ class _InsertKtpState extends State<InsertKtp> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            if (_image == null && _webImage == null && _imageUrl == null)
+            if (_image == null && _webImage == null)
               Text('No image selected.')
             else if (kIsWeb && _webImage != null)
               Container(
                 constraints: BoxConstraints(
-                  maxWidth: 300.0, // Set maximum width
-                  maxHeight: 300.0, // Set maximum height
+                  maxWidth: MediaQuery.of(context).size.width * 0.8,
+                  maxHeight: MediaQuery.of(context).size.height * 0.4,
                 ),
                 child: Image.memory(
                   _webImage!,
                   fit: BoxFit.contain,
                 ),
               )
-            else if (kIsWeb && _imageUrl != null)
-              Container(
-                constraints: BoxConstraints(
-                  maxWidth: 300.0, // Set maximum width
-                  maxHeight: 300.0, // Set maximum height
-                ),
-                child: Image.network(
-                  _imageUrl!,
-                  fit: BoxFit.contain,
-                ),
-              )
             else if (!kIsWeb && _image != null)
               Container(
                 constraints: BoxConstraints(
-                  maxWidth: 300.0, // Set maximum width
-                  maxHeight: 300.0, // Set maximum height
+                  maxWidth: MediaQuery.of(context).size.width * 0.8,
+                  maxHeight: MediaQuery.of(context).size.height * 0.4,
                 ),
                 child: Image.file(
                   _image!,
@@ -146,15 +126,9 @@ class _InsertKtpState extends State<InsertKtp> {
                 ),
               ),
             SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(width: 20),
-                IconButton(
-                  icon: Icon(Icons.photo_library, size: 50),
-                  onPressed: () => _pickImage(ImageSource.gallery),
-                ),
-              ],
+            IconButton(
+              icon: Icon(Icons.photo_library, size: 50),
+              onPressed: () => _pickImage(ImageSource.gallery),
             ),
             SizedBox(height: 20),
             ElevatedButton(

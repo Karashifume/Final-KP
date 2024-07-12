@@ -43,7 +43,7 @@ class _DetailUserState extends State<DetailUser> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Config.primaryColor,
-        title: const Text('User Details'),
+        title: const Text('Detail Pesanan'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -62,17 +62,17 @@ class _DetailUserState extends State<DetailUser> {
             DetailBox(title: 'Day', content: widget.schedule['day']),
             DetailBox(title: 'Time', content: widget.schedule['time']),
             DetailBox(title: 'Alamat', content: widget.schedule['alamat']),
-            DetailBox(title: 'Harga', content: 'Rp.250.000'),
-            const Divider(),
-            if (pasienDetails != null) ...[
-              DetailBox(title: 'NIK', content: pasienDetails!['nik']),
-              DetailBox(title: 'Nama Asli', content: pasienDetails!['nama_asli']),
-              DetailBox(title: 'Tanggal Lahir', content: pasienDetails!['tgl_lahir']),
-              DetailBox(title: 'Alamat', content: pasienDetails!['alamat']),
-              DetailBox(title: 'Agama', content: pasienDetails!['agama']),
-              DetailBox(title: 'Pekerjaan', content: pasienDetails!['perkerjaan']),
-            ] else
-              Center(child: CircularProgressIndicator()),
+            DetailBox(title: 'Harga', content: 'Rp.${widget.schedule['harga']}'),
+            // const Divider(),
+            // if (pasienDetails != null) ...[
+            //   DetailBox(title: 'NIK', content: pasienDetails!['nik'] ?? 'N/A'),
+            //   DetailBox(title: 'Nama Asli', content: pasienDetails!['nama_asli'] ?? 'N/A'),
+            //   DetailBox(title: 'Tanggal Lahir', content: pasienDetails!['tgl_lahir'] ?? 'N/A'),
+            //   DetailBox(title: 'Alamat', content: pasienDetails!['alamat'] ?? 'N/A'),
+            //   DetailBox(title: 'Agama', content: pasienDetails!['agama'] ?? 'N/A'),
+            //   DetailBox(title: 'Pekerjaan', content: pasienDetails!['perkerjaan'] ?? 'N/A'),
+            // ] else
+            //   Center(child: CircularProgressIndicator()),
           ],
         ),
       ),

@@ -44,4 +44,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/admisi/verify', [AdmisiController::class, 'verifyUser']);
     Route::put('/appointments/{id}/status', [AppointmentsController::class, 'updateStatus']);
     Route::put('/appointments/{id}/details', [AppointmentsController::class, 'updateDetails']);
+    Route::get('/appointments/doctor/{doctorId}', [AppointmentsController::class, 'getDoctorAppointments']);
+    Route::put('/appointments/{id}/status', [AppointmentsController::class, 'updateStatus']);
+    Route::put('/appointments/{id}/alasan', [AppointmentsController::class, 'updateAlasan']);
 });

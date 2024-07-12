@@ -12,15 +12,17 @@ class AppointmentPage extends StatefulWidget {
   State<AppointmentPage> createState() => _AppointmentPageState();
 }
 
-//enum for appointment status
 enum FilterStatus { upcoming, complete, cancel }
 
 class _AppointmentPageState extends State<AppointmentPage> {
-  FilterStatus status = FilterStatus.upcoming; //initial status
+  FilterStatus status = FilterStatus.upcoming;
   Alignment _alignment = Alignment.centerLeft;
   List<dynamic> schedules = [];
+  String searchQuery = '';
+  String selectedCategory = 'All';
+  String sortBy = 'doctor_name';
+  bool sortAscending = true;
 
-  //get appointments details
   Future<void> getAppointments() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
@@ -38,6 +40,26 @@ class _AppointmentPageState extends State<AppointmentPage> {
     super.initState();
   }
 
+  void _showAlasanDialog(String? alasan) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Lihat Alasan'),
+          content: Text(alasan ?? 'Belum ada Alasan'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Tutup'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<SharedPreferences>(
@@ -50,8 +72,21 @@ class _AppointmentPageState extends State<AppointmentPage> {
         final String token = snapshot.data?.getString('token') ?? '';
 
         List<dynamic> filteredSchedules = schedules.where((var schedule) {
-          return schedule['status'] == status.name;
+          return schedule['status'] == status.name &&
+              (schedule['doctor_name'].toLowerCase().contains(searchQuery.toLowerCase()) ||
+                  schedule['category'].toLowerCase().contains(searchQuery.toLowerCase())) &&
+              (selectedCategory == 'All' || schedule['category'] == selectedCategory);
         }).toList();
+
+        filteredSchedules.sort((a, b) {
+          int compare;
+          if (sortBy == 'doctor_name') {
+            compare = a['doctor_name'].compareTo(b['doctor_name']);
+          } else {
+            compare = (a['harga'] as int).compareTo(b['harga'] as int);
+          }
+          return sortAscending ? compare : -compare;
+        });
 
         return SafeArea(
           child: Padding(
@@ -66,6 +101,119 @@ class _AppointmentPageState extends State<AppointmentPage> {
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
+                ),
+                Config.spaceSmall,
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: 'Search',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            searchQuery = value;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        value: selectedCategory,
+                        items: [
+                          'All',
+                          ...schedules
+                              .map<String>((schedule) => schedule['category'])
+                              .toSet()
+                        ].map<DropdownMenuItem<String>>((dynamic value) {
+                          return DropdownMenuItem<String>(
+                            value: value as String,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedCategory = value!;
+                          });
+                        },
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.sort),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return StatefulBuilder(
+                              builder: (context, setState) {
+                                return AlertDialog(
+                                  title: Text('Urutkan Berdasarkan'),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      ListTile(
+                                        title: Text('Doctor Name'),
+                                        leading: Radio<String>(
+                                          value: 'doctor_name',
+                                          groupValue: sortBy,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              sortBy = value!;
+                                            });
+                                            this.setState(() {}); // Update the main state
+                                          },
+                                        ),
+                                      ),
+                                      ListTile(
+                                        title: Text('Harga'),
+                                        leading: Radio<String>(
+                                          value: 'harga',
+                                          groupValue: sortBy,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              sortBy = value!;
+                                            });
+                                            this.setState(() {}); // Update the main state
+                                          },
+                                        ),
+                                      ),
+                                      SwitchListTile(
+                                        title: Text('Ascending'),
+                                        value: sortAscending,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            sortAscending = value;
+                                          });
+                                          this.setState(() {}); // Update the main state
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Close'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
                 ),
                 Config.spaceSmall,
                 Stack(
@@ -132,7 +280,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 ),
                 Config.spaceSmall,
                 filteredSchedules.isEmpty
-                    ? Center(child: Text('No appointments available'))
+                    ? const Center(child: Text('No appointments available'))
                     : Expanded(
                         child: ListView.builder(
                           itemCount: filteredSchedules.length,
@@ -146,9 +294,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              margin: !isLastElement
-                                  ? const EdgeInsets.only(bottom: 20)
-                                  : EdgeInsets.zero,
+                              margin: !isLastElement ? const EdgeInsets.only(bottom: 20) : EdgeInsets.zero,
                               child: Padding(
                                 padding: const EdgeInsets.all(15),
                                 child: Column(
@@ -157,12 +303,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                     Row(
                                       children: [
                                         CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                              "http://127.0.0.1:8000${schedule['doctor_profile']}"),
+                                          backgroundImage: NetworkImage("http://127.0.0.1:8000${schedule['doctor_profile']}"),
                                         ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
+                                        const SizedBox(width: 10),
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -173,9 +316,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                                 fontWeight: FontWeight.w700,
                                               ),
                                             ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
+                                            const SizedBox(height: 5),
                                             Text(
                                               schedule['category'],
                                               style: const TextStyle(
@@ -188,18 +329,21 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
+                                    const SizedBox(height: 15),
                                     ScheduleCard(
                                       date: schedule['date'],
                                       day: schedule['day'],
                                       time: schedule['time'],
                                     ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    if (schedule['status'] != 'complete' && schedule['status'] != 'cancel')
+                                    const SizedBox(height: 15),
+                                    if (schedule['status'] == 'cancel')
+                                      OutlinedButton(
+                                        onPressed: () {
+                                          _showAlasanDialog(schedule['alasan']);
+                                        },
+                                        child: const Text('Lihat Alasan'),
+                                      ),
+                                    if (schedule['status'] == 'upcoming') ...[
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
@@ -215,9 +359,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                               ),
                                             ),
                                           ),
-                                          const SizedBox(
-                                            width: 20,
-                                          ),
+                                          const SizedBox(width: 20),
                                           Expanded(
                                             child: OutlinedButton(
                                               style: OutlinedButton.styleFrom(
@@ -252,8 +394,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                             ),
                                           ),
                                         ],
-                                      )
-                                    else if (schedule['status'] == 'complete')
+                                      ),
+                                    ] else if (schedule['status'] == 'complete') ...[
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
@@ -264,7 +406,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                                   context,
                                                   'view_medrec',
                                                   arguments: schedule['id'],
-                                                  );
+                                                );
                                               },
                                               child: const Text(
                                                 'Lihat Hasil Diagnosa',
@@ -272,25 +414,10 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                               ),
                                             ),
                                           ),
-                                          const SizedBox(
-                                            width: 20,
-                                          ),
-                                          Expanded(
-                                            child: OutlinedButton(
-                                              style: OutlinedButton.styleFrom(
-                                                backgroundColor: Config.primaryColor,
-                                              ),
-                                              onPressed: () {
-                                                // Navigator to Beri Rating page (To be implemented)
-                                              },
-                                              child: const Text(
-                                                'Beri Rating',
-                                                style: TextStyle(color: Colors.white),
-                                              ),
-                                            ),
-                                          ),
+                                          const SizedBox(width: 20),
                                         ],
                                       ),
+                                    ],
                                   ],
                                 ),
                               ),
@@ -308,9 +435,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
 }
 
 class ScheduleCard extends StatelessWidget {
-  const ScheduleCard(
-      {Key? key, required this.date, required this.day, required this.time})
-      : super(key: key);
+  const ScheduleCard({Key? key, required this.date, required this.day, required this.time}) : super(key: key);
   final String date;
   final String day;
   final String time;
@@ -333,33 +458,28 @@ class ScheduleCard extends StatelessWidget {
             color: Config.primaryColor,
             size: 15,
           ),
-          const SizedBox(
-            width: 5,
-          ),
+          const SizedBox(width: 5),
           Text(
             '$day, $date',
             style: const TextStyle(
               color: Config.primaryColor,
             ),
           ),
-          const SizedBox(
-            width: 20,
-          ),
+          const SizedBox(width: 20),
           const Icon(
             Icons.access_alarm,
             color: Config.primaryColor,
             size: 17,
           ),
-          const SizedBox(
-            width: 5,
-          ),
+          const SizedBox(width: 5),
           Flexible(
-              child: Text(
-            time,
-            style: const TextStyle(
-              color: Config.primaryColor,
+            child: Text(
+              time,
+              style: const TextStyle(
+                color: Config.primaryColor,
+              ),
             ),
-          ))
+          ),
         ],
       ),
     );

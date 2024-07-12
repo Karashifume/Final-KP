@@ -62,6 +62,12 @@ class AppointmentsController extends Controller
     {
         //
     }
+    public function getDoctorAppointments($doctorId)
+{
+    $appointments = Appointments::where('doc_id', $doctorId)->where('status', 'upcoming')->get();
+    return response()->json($appointments);
+}
+
 
     /**
      * Store a newly created resource in storage.
@@ -70,47 +76,59 @@ class AppointmentsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    $appointment = new Appointments();
-    $appointment->user_id = $user->id;
-    $appointment->doc_id = $request->get('doctor_id');
-    $appointment->date = $request->get('date');
-    $appointment->day = $request->get('day');
-    $appointment->time = $request->get('time');
-    $appointment->status = 'upcoming'; 
-    $appointment->keluhan = $request->get('keluhan');
-    $appointment->alamat = $request->get('alamat');
-    $appointment->harga = $request->get('harga'); 
-    $appointment->save();
+        $appointment = new Appointments();
+        $appointment->user_id = $user->id;
+        $appointment->doc_id = $request->get('doctor_id');
+        $appointment->date = $request->get('date');
+        $appointment->day = $request->get('day');
+        $appointment->time = $request->get('time');
+        $appointment->status = 'upcoming'; 
+        $appointment->keluhan = $request->get('keluhan');
+        $appointment->alamat = $request->get('alamat');
+        $appointment->harga = $request->get('harga'); 
+        $appointment->save();
 
-    return response()->json(['success' => 'New Appointment has been made successfully!'], 200);
-}
-public function updateStatus(Request $request, $id)
+        return response()->json(['success' => 'New Appointment has been made successfully!'], 200);
+    }
+
+    public function updateStatus(Request $request, $id)
     {
         $appointment = Appointments::find($id);
         if ($appointment) {
             $appointment->status = $request->get('status');
+            $appointment->alasan = $request->get('alasan'); // Add this line
             $appointment->save();
             return response()->json(['success' => 'Appointment status updated successfully!'], 200);
         }
         return response()->json(['error' => 'Appointment not found'], 404);
     }
-    public function updateDetails(Request $request, $id)
-{
-    $appointment = Appointments::find($id);
-    if ($appointment) {
-        $appointment->date = $request->get('date');
-        $appointment->day = $request->get('day');
-        $appointment->time = $request->get('time');
-        $appointment->save();
-        return response()->json(['success' => 'Appointment details updated successfully!'], 200);
+
+    public function updateAlasan(Request $request, $id)
+    {
+        $appointment = Appointments::find($id);
+        if ($appointment) {
+            $appointment->alasan = $request->get('alasan');
+            $appointment->save();
+            return response()->json(['success' => 'Appointment reason updated successfully!'], 200);
+        }
+        return response()->json(['error' => 'Appointment not found'], 404);
     }
-    return response()->json(['error' => 'Appointment not found'], 404);
-}
 
-
+    public function updateDetails(Request $request, $id)
+    {
+        $appointment = Appointments::find($id);
+        if ($appointment) {
+            $appointment->date = $request->get('date');
+            $appointment->day = $request->get('day');
+            $appointment->time = $request->get('time');
+            $appointment->save();
+            return response()->json(['success' => 'Appointment details updated successfully!'], 200);
+        }
+        return response()->json(['error' => 'Appointment not found'], 404);
+    }
 
     /**
      * Display the specified resource.

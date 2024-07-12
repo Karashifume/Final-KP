@@ -24,6 +24,7 @@ return new class extends Migration
             $table->unsignedInteger('experience')->nullable();
             $table->longText('bio_data')->nullable();
             $table->string('status')->nullable();
+            $table->unsignedInteger('harga')->nullable();
             $table->foreign('doc_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

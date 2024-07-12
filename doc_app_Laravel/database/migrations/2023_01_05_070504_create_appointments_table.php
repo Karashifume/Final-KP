@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('keluhan');
             $table->string('alamat');
             $table->integer('harga');
+            $table->string('alasan')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

@@ -11,16 +11,12 @@ class DocDash extends StatefulWidget {
   @override
   State<DocDash> createState() => _DocDashState();
 }
-
-//enum for appointment status
 enum FilterStatus { upcoming, complete, cancel }
-
 class _DocDashState extends State<DocDash> {
-  FilterStatus status = FilterStatus.upcoming; //initial status
+  FilterStatus status = FilterStatus.upcoming;
   Alignment _alignment = Alignment.centerLeft;
   List<dynamic> schedules = [];
 
-  //get appointments details
   Future<void> getAppointments() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
@@ -36,6 +32,42 @@ class _DocDashState extends State<DocDash> {
   void initState() {
     getAppointments();
     super.initState();
+  }
+
+  void _showAlasanDialog(int appointmentId, String? currentAlasan, String token) {
+    TextEditingController alasanController = TextEditingController(text: currentAlasan);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Tambah Alasan'),
+          content: TextField(
+            controller: alasanController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              hintText: 'Masukkan alasan pembatalan',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await DioProvider().updateAppointmentAlasan(appointmentId, alasanController.text, token);
+                Navigator.of(context).pop();
+                getAppointments();
+              },
+              child: Text('Simpan'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -105,10 +137,8 @@ class _DocDashState extends State<DocDash> {
                                     child: Text(
                                       filterStatus.name,
                                       style: TextStyle(
-                                        fontSize: 14, // Reduced font size
-                                        fontWeight: status == filterStatus
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
+                                        fontSize: 14,
+                                        fontWeight: status == filterStatus ? FontWeight.bold : FontWeight.normal,
                                       ),
                                     ),
                                   ),
@@ -131,7 +161,7 @@ class _DocDashState extends State<DocDash> {
                             child: Text(
                               status.name,
                               style: const TextStyle(
-                                fontSize: 14, // Reduced font size
+                                fontSize: 14,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -157,9 +187,7 @@ class _DocDashState extends State<DocDash> {
                                   ),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
-                                margin: !isLastElement
-                                    ? const EdgeInsets.only(bottom: 20)
-                                    : EdgeInsets.zero,
+                                margin: !isLastElement ? const EdgeInsets.only(bottom: 20) : EdgeInsets.zero,
                                 child: Padding(
                                   padding: const EdgeInsets.all(15),
                                   child: Column(
@@ -168,14 +196,11 @@ class _DocDashState extends State<DocDash> {
                                       Row(
                                         children: [
                                           CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                                "http://127.0.0.1:8000${schedule['pasien_profile']}"),
+                                            backgroundImage: NetworkImage("http://127.0.0.1:8000${schedule['pasien_profile']}"),
                                           ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
+                                          const SizedBox(width: 10),
                                           Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,              
                                             children: [
                                               Text(
                                                 schedule['pasien_name'],
@@ -184,9 +209,7 @@ class _DocDashState extends State<DocDash> {
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                               ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
+                                              const SizedBox(height: 5),
                                               Text(
                                                 schedule['category'],
                                                 style: const TextStyle(
@@ -199,65 +222,121 @@ class _DocDashState extends State<DocDash> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
+                                      const SizedBox(height: 15),
                                       ScheduleCard(
                                         date: schedule['date'],
                                         day: schedule['day'],
                                         time: schedule['time'],
                                       ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: OutlinedButton(
-                                              onPressed: () {
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  'detail_user',
-                                                  arguments: schedule,
-                                                );
-                                              },
-                                              child: const Text(
-                                                'Detail User',
-                                                style: TextStyle(color: Config.primaryColor),
+                                      const SizedBox(height: 15),
+                                      if (schedule['status'] == 'cancel') 
+                                        OutlinedButton(
+                                          onPressed: () {
+                                            _showAlasanDialog(schedule['id'], schedule['alasan'], token);
+                                          },
+                                          child: const Text('Tambah Alasan'),
+                                        ),
+                                      if (schedule['status'] == 'upcoming') ...[
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: OutlinedButton(
+                                                style: OutlinedButton.styleFrom(
+                                                  side: const BorderSide(color: Colors.red),
+                                                ),
+                                                onPressed: () async {
+                                                  await DioProvider().updateAppointmentStatus(schedule['id'], 'cancel', token);
+                                                  getAppointments();
+                                                },
+                                                child: const Text(
+                                                  'Cancel',
+                                                  style: TextStyle(color: Colors.red),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            width: 20,
-                                          ),
-                                          Expanded(
-                                            child: OutlinedButton(
-                                              style: OutlinedButton.styleFrom(
-                                                backgroundColor: Config.primaryColor,
+                                            const SizedBox(width: 20),
+                                            Expanded(
+                                              child: OutlinedButton(
+                                                onPressed: () {
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    'detail_user',
+                                                    arguments: schedule,
+                                                  ).then((_) => getAppointments());
+                                                },
+                                                child: const Text(
+                                                  'Detail Pesanan',
+                                                  style: TextStyle(color: Config.primaryColor),
+                                                ),
                                               ),
-                                              onPressed: () {
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  'soap_menu',
-                                                  arguments: schedule,
-                                                ).then((value) async {
-                                                  if (schedule['status'] != 'complete') {
-                                                    await DioProvider().updateAppointmentStatus(schedule['id'], 'complete', token);
+                                            ),
+                                            const SizedBox(width: 20),
+                                            Expanded(
+                                              child: OutlinedButton(
+                                                style: OutlinedButton.styleFrom(
+                                                  backgroundColor: Config.primaryColor,
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    'soap_menu',
+                                                    arguments: schedule,
+                                                  ).then((value) {
                                                     getAppointments();
-                                                  }
-                                                });
-                                              },
-                                              child: Text(
-                                                schedule['status'] == 'complete'
-                                                    ? 'Edit SOAP'
-                                                    : 'Insert SOAP',
-                                                style: const TextStyle(color: Colors.white),
+                                                  });
+                                                },
+                                                child: const Text(
+                                                  'Insert SOAP',
+                                                  style: TextStyle(color: Colors.white),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
+                                          ],
+                                        ),
+                                      ] else if (schedule['status'] == 'complete') ...[
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: OutlinedButton(
+                                                onPressed: () {
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    'detail_user',
+                                                    arguments: schedule,
+                                                  ).then((_) => getAppointments());
+                                                },
+                                                child: const Text(
+                                                  'Detail Pesanan',
+                                                  style: TextStyle(color: Config.primaryColor),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 20),
+                                            Expanded(
+                                              child: OutlinedButton(
+                                                style: OutlinedButton.styleFrom(
+                                                  backgroundColor: Config.primaryColor,
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    'soap_menu',
+                                                    arguments: schedule,
+                                                  ).then((value) {
+                                                    getAppointments();
+                                                  });
+                                                },
+                                                child: const Text(
+                                                  'Edit SOAP',
+                                                  style: TextStyle(color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ],
                                   ),
                                 ),
@@ -299,36 +378,30 @@ class ScheduleCard extends StatelessWidget {
             color: Config.primaryColor,
             size: 15,
           ),
-          const SizedBox(
-            width: 5,
-          ),
+          const SizedBox(width: 5),
           Text(
             '$day, $date',
             style: const TextStyle(
               color: Config.primaryColor,
             ),
           ),
-          const SizedBox(
-            width: 20,
-          ),
+          const SizedBox(width: 20),
           const Icon(
             Icons.access_alarm,
             color: Config.primaryColor,
             size: 17,
           ),
-          const SizedBox(
-            width: 5,
-          ),
+          const SizedBox(width: 5),
           Flexible(
-              child: Text(
-            time,
-            style: const TextStyle(
-              color: Config.primaryColor,
+            child: Text(
+              time,
+              style: const TextStyle(
+                color: Config.primaryColor,
+              ),
             ),
-          ))
+          ),
         ],
       ),
     );
   }
 }
-  

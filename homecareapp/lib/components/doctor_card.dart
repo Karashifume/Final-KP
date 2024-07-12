@@ -8,13 +8,13 @@ class DoctorCard extends StatelessWidget {
     required this.doctor,
     required this.isFav,
     this.isClickable = true,
-    this.showSelectButton = true, // Added this parameter
+    this.showSelectButton = true,
   }) : super(key: key);
 
   final Map<String, dynamic> doctor;
   final bool isFav;
   final bool isClickable;
-  final bool showSelectButton; // Added this field
+  final bool showSelectButton;
 
   @override
   Widget build(BuildContext context) {
@@ -65,27 +65,22 @@ class DoctorCard extends StatelessWidget {
                     const Spacer(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: const <Widget>[
-                        Icon(
-                          Icons.star_border,
-                          color: Colors.yellow,
-                          size: 16,
+                      children: <Widget>[
+                        Text(
+                          'Harga: ',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        Spacer(
-                          flex: 1,
+                        const Spacer(flex: 1),
+                        Text(
+                          'Rp. ${doctor['harga']}',
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
-                        Text('4.5'),
-                        Spacer(
-                          flex: 1,
-                        ),
-                        Text('Reviews'),
-                        Spacer(
-                          flex: 1,
-                        ),
-                        Text('(20)'),
-                        Spacer(
-                          flex: 7,
-                        ),
+                        const Spacer(flex: 7),
                       ],
                     ),
                   ],
@@ -93,7 +88,7 @@ class DoctorCard extends StatelessWidget {
               ),
             ),
             // Select Doctor Button
-            if (showSelectButton) // Show the button conditionally
+            if (showSelectButton)
               IconButton(
                 icon: Icon(Icons.check_circle),
                 onPressed: isClickable

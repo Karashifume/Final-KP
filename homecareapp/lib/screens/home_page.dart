@@ -1,14 +1,12 @@
-// home_page.dart
 import 'package:flutter/foundation.dart';
 import 'package:homecareapp/components/doctor_card.dart';
 import 'package:homecareapp/data/ktp_data.dart';
 import 'package:homecareapp/models/auth_model.dart';
-import 'package:homecareapp/screens/konsultas_booking.dart';
+import 'package:homecareapp/screens/konsultasi_booking.dart';
 import 'package:homecareapp/utils/config.dart';
 import 'package:homecareapp/screens/insert_ktp.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:homecareapp/providers/dio_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,6 +19,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Map<String, dynamic> user = {};
   Map<String, dynamic> doctor = {};
+  String searchQuery = '';
+  String selectedCategory = 'All';
+  String sortBy = 'doctor_name';
+  bool sortAscending = true;
   List<dynamic> favList = [];
   bool _isKtpVerified = false;
   String? _token;
@@ -40,19 +42,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadKtpData() async {
-    if (_token == null) return;
+    String? imagePath = await KtpData.getImagePath();
+    String? base64Image = await KtpData.getImageBase64();
 
-    var response = await DioProvider().getKtp(_token!);
-
-    if (response.statusCode == 200 && response.data != null) {
-      setState(() {
-        _isKtpVerified = true;
-      });
-    } else {
-      setState(() {
-        _isKtpVerified = false;
-      });
-    }
+    setState(() {
+      _isKtpVerified = imagePath != null || base64Image != null;
+    });
   }
 
   @override
@@ -62,8 +57,29 @@ class _HomePageState extends State<HomePage> {
     doctor = Provider.of<AuthModel>(context, listen: false).getAppointment;
     favList = Provider.of<AuthModel>(context, listen: false).getFav;
 
+    // Check if user['doctor'] is null and handle accordingly
+    final List<dynamic> doctorsList = user['doctor'] ?? [];
+
+    // Filter and sort doctorsList based on search, category, and sort criteria
+    List<dynamic> filteredDoctors = doctorsList.where((doctor) {
+      final String doctorName = doctor['doctor_name'] ?? '';
+      final String category = doctor['category'] ?? '';
+      return (doctorName.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              category.toLowerCase().contains(searchQuery.toLowerCase())) &&
+          (selectedCategory == 'All' || category == selectedCategory);
+    }).toList();
+
+    filteredDoctors.sort((a, b) {
+      int compare;
+      if (sortBy == 'doctor_name') {
+        compare = a['doctor_name'].compareTo(b['doctor_name']);
+      } else {
+        compare = (a['harga'] as int).compareTo(b['harga'] as int);
+      }
+      return sortAscending ? compare : -compare;
+    });
+
     return Scaffold(
-      //if user is empty, then return progress indicator
       body: user.isEmpty
           ? const Center(
               child: CircularProgressIndicator(),
@@ -101,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               SizedBox(height: 20),
                               Text(
-                                user['name'],
+                                user['name'] ?? '',
                                 style: TextStyle(fontSize: 18),
                               ),
                               SizedBox(height: 20),
@@ -120,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20), // Add space here
+                      SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
@@ -132,13 +148,15 @@ class _HomePageState extends State<HomePage> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => InsertKtp()),
-                                  );
+                                  ).then((_) {
+                                    _loadKtpData();
+                                  });
                                 },
                                 child: CircleAvatar(
                                   radius: 30,
                                   backgroundColor: Color(0xFF69F0AE),
                                   child: Icon(
-                                    Icons.camera_alt,
+                                    Icons.photo_library,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -150,16 +168,21 @@ class _HomePageState extends State<HomePage> {
                           Column(
                             children: [
                               GestureDetector(
-                                onTap: _isKtpVerified ? () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => KonsultasiBooking()),
-                                  );
-                                } : null,
+                                onTap: _isKtpVerified
+                                    ? () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  KonsultasiBooking()),
+                                        );
+                                      }
+                                    : null,
                                 child: CircleAvatar(
                                   radius: 30,
-                                  backgroundColor: _isKtpVerified ? Color(0xFF69F0AE) : Colors.grey,
+                                  backgroundColor: _isKtpVerified
+                                      ? Color(0xFF69F0AE)
+                                      : Colors.grey,
                                   child: Icon(
                                     Icons.local_hospital,
                                     color: Colors.white,
@@ -181,16 +204,127 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Config.spaceSmall,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                labelText: 'Search',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  searchQuery = value;
+                                });
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              value: selectedCategory,
+                              items: [
+                                'All',
+                                ...doctorsList
+                                    .map<String>((doctor) => doctor['category'])
+                                    .toSet()
+                              ].map<DropdownMenuItem<String>>((dynamic value) {
+                                return DropdownMenuItem<String>(
+                                  value: value as String,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedCategory = value!;
+                                });
+                              },
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.sort),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return AlertDialog(
+                                        title: Text('Urutkan Berdasarkan'),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            ListTile(
+                                              title: Text('Doctor Name'),
+                                              leading: Radio<String>(
+                                                value: 'doctor_name',
+                                                groupValue: sortBy,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    sortBy = value!;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            ListTile(
+                                              title: Text('Harga'),
+                                              leading: Radio<String>(
+                                                value: 'harga',
+                                                groupValue: sortBy,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    sortBy = value!;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            SwitchListTile(
+                                              title: Text('Dari Terkecil'),
+                                              value: sortAscending,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  sortAscending = value;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Close'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      Config.spaceSmall,
                       Column(
                         children: List.generate(
-                          user['doctor'].length > 10 ? 10 : user['doctor'].length,
+                          filteredDoctors.length,
                           (index) {
                             return DoctorCard(
-                              doctor: user['doctor'][index],
-                              //if lates fav list contains particular doctor id, then show fav icon
-                              isFav: favList.contains(user['doctor'][index]['doc_id']),
-                              showSelectButton: false, // Disable the button for homepage
-                              isClickable: false, // Disable clickable for homepage
+                              doctor: filteredDoctors[index],
+                              isFav: favList.contains(
+                                filteredDoctors[index]['doc_id'],
+                              ),
+                              showSelectButton: false,
+                              isClickable: false,
                             );
                           },
                         ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:homecareapp/utils/config.dart';
-// import 'package:provider/provider.dart';
 
 class DoctorDetails extends StatefulWidget {
   const DoctorDetails({Key? key, required this.doctor, required this.isFav})
@@ -40,13 +39,8 @@ class _DoctorDetailsState extends State<DoctorDetails> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            AboutDoctor(
-              doctor: doctor,
-            ),
-            DetailBody(
-              doctor: doctor,
-            ),
-
+            AboutDoctor(doctor: doctor),
+            DetailBody(doctor: doctor),
           ],
         ),
       ),
@@ -98,9 +92,9 @@ class AboutDoctor extends StatelessWidget {
           Config.spaceSmall,
           SizedBox(
             width: Config.widthSize * 0.75,
-            child: const Text(
-              'Rumah Sakit Mohammad Hoesin',
-              style: TextStyle(
+            child: Text(
+              'Rp. ${doctor['harga']}',
+              style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 15,
@@ -128,10 +122,7 @@ class DetailBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Config.spaceSmall,
-          DoctorInfo(
-            patients: doctor['patients'],
-            exp: doctor['experience'],
-          ),
+          DoctorInfo(patients: doctor['patients'], exp: doctor['experience']),
           Config.spaceMedium,
           const Text(
             'Deskripsi Dokter',
@@ -146,7 +137,7 @@ class DetailBody extends StatelessWidget {
             ),
             softWrap: true,
             textAlign: TextAlign.justify,
-          )
+          ),
         ],
       ),
     );
@@ -164,24 +155,11 @@ class DoctorInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        InfoCard(
-          label: 'Patients',
-          value: '$patients',
-        ),
-        const SizedBox(
-          width: 15,
-        ),
-        InfoCard(
-          label: 'Experiences',
-          value: '$exp years',
-        ),
-        const SizedBox(
-          width: 15,
-        ),
-        const InfoCard(
-          label: 'Rating',
-          value: '4.6',
-        ),
+        InfoCard(label: 'Patients', value: '$patients'),
+        const SizedBox(width: 15),
+        InfoCard(label: 'Experiences', value: '$exp years'),
+        const SizedBox(width: 15),
+        const InfoCard(label: 'Rating', value: '4.6'),
       ],
     );
   }
@@ -202,10 +180,7 @@ class InfoCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           color: Config.primaryColor,
         ),
-        padding: const EdgeInsets.symmetric(
-          vertical: 15,
-          horizontal: 15,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
         child: Column(
           children: <Widget>[
             Text(
@@ -216,9 +191,7 @@ class InfoCard extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             Text(
               value,
               style: const TextStyle(

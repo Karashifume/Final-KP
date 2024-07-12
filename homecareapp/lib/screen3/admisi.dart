@@ -38,6 +38,7 @@ class _AdmisiPageState extends State<AdmisiPage> {
       appBar: AppBar(
         backgroundColor: Config.primaryColor, // Changed navbar color
         title: Text('Admisi - Unverified Users'),
+        automaticallyImplyLeading: false, // Remove default back button
         actions: [
           IconButton(
             icon: Icon(Icons.account_circle),

@@ -17,9 +17,9 @@ class Doctor extends Model
         'experience',
         'bio_data',
         'status',
+        'harga',
     ];
 
-    //state this is belong to user table
     public function user(){
         return $this->belongsTo(User::class);
     }

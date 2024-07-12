@@ -73,7 +73,10 @@ class _VerifyUserPageState extends State<VerifyUserPage> {
         _pekerjaanController.text,
       );
 
-      if (response == 'Success') {
+      if (response == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Verify user succeeded'),
+        ));
         Navigator.pop(context, true);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

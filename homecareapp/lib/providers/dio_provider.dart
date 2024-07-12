@@ -7,6 +7,7 @@ import 'dart:html' as html;
 
 class DioProvider {
   static String api = 'http://127.0.0.1:8000/api';
+  
   //get token
   Future<dynamic> getToken(String email, String password) async {
     try {
@@ -65,22 +66,36 @@ class DioProvider {
   }
 }
 
-  Future<dynamic> bookAppointment(
-    String date, String day, String time, int doctor, String keluhan, String alamat, String token, String harga) async {
-  try {
-    var response = await Dio().post('$api/book',
-        data: {'date': date, 'day': day, 'time': time, 'doctor_id': doctor, 'alamat': alamat, 'keluhan': keluhan, 'harga': harga},
-        options: Options(headers: {'Authorization': 'Bearer $token'}));
-
-    if (response.statusCode == 200 && response.data != '') {
-      return response.statusCode;
-    } else {
-      return 'Error BookAppointment';
+  Future<dynamic> getDoctorAppointments(int doctorId, String token) async {
+    try {
+      var response = await Dio().get('$api/appointments/doctor/$doctorId',
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+      if (response.statusCode == 200 && response.data != '') {
+        return json.decode(response.data);
+      } else {
+        return 'Error';
+      }
+    } catch (error) {
+      return 'Error';
     }
-  } catch (error) {
-    return error;
   }
-}
+
+  Future<dynamic> bookAppointment(
+      String date, String day, String time, int doctor, String keluhan, String alamat, String token, String harga) async {
+    try {
+      var response = await Dio().post('$api/book',
+          data: {'date': date, 'day': day, 'time': time, 'doctor_id': doctor, 'alamat': alamat, 'keluhan': keluhan, 'harga': harga},
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+
+      if (response.statusCode == 200 && response.data != '') {
+        return response.statusCode;
+      } else {
+        return 'Error BookAppointment';
+      }
+    } catch (error) {
+      return error;
+    }
+  }
 
 
   //retrieve booking details
@@ -230,10 +245,10 @@ class DioProvider {
     }
   }
 
-  Future<dynamic> updateAppointmentStatus(int appointmentId, String status, String token) async {
+  Future<dynamic> updateAppointmentStatus(int appointmentId, String status, String token, {String? alasan}) async {
     try {
       var response = await Dio().put('$api/appointments/$appointmentId/status',
-          data: {'status': status},
+          data: {'status': status, 'alasan': alasan},
           options: Options(headers: {'Authorization': 'Bearer $token'}));
 
       if (response.statusCode == 200 && response.data != '') {
@@ -245,6 +260,23 @@ class DioProvider {
       return error;
     }
   }
+
+  Future<dynamic> updateAppointmentAlasan(int appointmentId, String alasan, String token) async {
+    try {
+      var response = await Dio().put('$api/appointments/$appointmentId/alasan',
+          data: {'alasan': alasan},
+          options: Options(headers: {'Authorization': 'Bearer $token'}));
+
+      if (response.statusCode == 200 && response.data != '') {
+        return response.statusCode;
+      } else {
+        return 'Error UpdateAppointmentAlasan';
+      }
+    } catch (error) {
+      return error;
+    }
+  }
+  
   Future<dynamic> updateAppointmentDetails(int appointmentId, String date, String day, String time, String token) async {
   try {
     var response = await Dio().put('$api/appointments/$appointmentId/details',
@@ -279,7 +311,8 @@ class DioProvider {
       return 'Error';
     }
   }
-Future<dynamic> getUnverifiedUsers(String token) async {
+  
+  Future<dynamic> getUnverifiedUsers(String token) async {
     try {
       var response = await Dio().get('$api/admisi/unverified',
           options: Options(headers: {'Authorization': 'Bearer $token'}));
@@ -289,6 +322,7 @@ Future<dynamic> getUnverifiedUsers(String token) async {
       return 'Error';
     }
   }
+
   Future<dynamic> getPasienDetails(String token, int userId) async {
     try {
       var response = await Dio().get('$api/pasien/details/$userId',
@@ -303,5 +337,4 @@ Future<dynamic> getUnverifiedUsers(String token) async {
       }
     }
   }
-  
 }

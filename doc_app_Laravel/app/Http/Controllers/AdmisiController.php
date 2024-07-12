@@ -11,7 +11,7 @@ class AdmisiController extends Controller
     public function getUnverifiedUsers()
     {
         $unverifiedUsers = Pasien::where('verified', false)->with('user')->get();
-    return response()->json($unverifiedUsers, 200);
+        return response()->json($unverifiedUsers, 200);
     }
 
     public function verifyUser(Request $request)
@@ -40,4 +40,3 @@ class AdmisiController extends Controller
         return response()->json(['message' => 'User verified successfully!'], 200);
     }
 }
-
