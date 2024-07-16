@@ -126,8 +126,9 @@ class _DoctorListState extends State<DoctorList> {
                               showDialog(
                                 context: context,
                                 builder: (context) {
+                                  // Change it from here
                                   return StatefulBuilder(
-                                    builder: (context, setState) {
+                                    builder: (context, setStateDialog) {
                                       return AlertDialog(
                                         title: Text('Urutkan Berdasarkan'),
                                         content: Column(
@@ -139,9 +140,10 @@ class _DoctorListState extends State<DoctorList> {
                                                 value: 'doctor_name',
                                                 groupValue: sortBy,
                                                 onChanged: (value) {
-                                                  setState(() {
+                                                  setStateDialog(() {
                                                     sortBy = value!;
                                                   });
+                                                  setState(() {}); // Update the main state
                                                 },
                                               ),
                                             ),
@@ -151,19 +153,21 @@ class _DoctorListState extends State<DoctorList> {
                                                 value: 'harga',
                                                 groupValue: sortBy,
                                                 onChanged: (value) {
-                                                  setState(() {
+                                                  setStateDialog(() {
                                                     sortBy = value!;
                                                   });
+                                                  setState(() {}); // Update the main state
                                                 },
                                               ),
                                             ),
                                             SwitchListTile(
-                                              title: Text('Dari Terkecil'),
+                                              title: Text('Menaik'),
                                               value: sortAscending,
                                               onChanged: (value) {
-                                                setState(() {
+                                                setStateDialog(() {
                                                   sortAscending = value;
                                                 });
+                                                setState(() {}); // Update the main state
                                               },
                                             ),
                                           ],
@@ -179,6 +183,7 @@ class _DoctorListState extends State<DoctorList> {
                                       );
                                     },
                                   );
+                                  // Into Here
                                 },
                               );
                             },

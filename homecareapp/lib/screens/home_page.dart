@@ -57,10 +57,10 @@ class _HomePageState extends State<HomePage> {
     doctor = Provider.of<AuthModel>(context, listen: false).getAppointment;
     favList = Provider.of<AuthModel>(context, listen: false).getFav;
 
-    // Check if user['doctor'] is null and handle accordingly
+    // cek apakah dokter itu null atau tidak
     final List<dynamic> doctorsList = user['doctor'] ?? [];
 
-    // Filter and sort doctorsList based on search, category, and sort criteria
+    // filter dan sorting berdasarkan categogry, search.
     List<dynamic> filteredDoctors = doctorsList.where((doctor) {
       final String doctorName = doctor['doctor_name'] ?? '';
       final String category = doctor['category'] ?? '';
@@ -255,7 +255,7 @@ class _HomePageState extends State<HomePage> {
                                 context: context,
                                 builder: (context) {
                                   return StatefulBuilder(
-                                    builder: (context, setState) {
+                                    builder: (context, setStateDialog) {
                                       return AlertDialog(
                                         title: Text('Urutkan Berdasarkan'),
                                         content: Column(
@@ -267,9 +267,10 @@ class _HomePageState extends State<HomePage> {
                                                 value: 'doctor_name',
                                                 groupValue: sortBy,
                                                 onChanged: (value) {
-                                                  setState(() {
+                                                  setStateDialog(() {
                                                     sortBy = value!;
                                                   });
+                                                  setState(() {}); // Update "main state"
                                                 },
                                               ),
                                             ),
@@ -279,9 +280,10 @@ class _HomePageState extends State<HomePage> {
                                                 value: 'harga',
                                                 groupValue: sortBy,
                                                 onChanged: (value) {
-                                                  setState(() {
+                                                  setStateDialog(() {
                                                     sortBy = value!;
                                                   });
+                                                  setState(() {}); // Update "main state"
                                                 },
                                               ),
                                             ),
@@ -289,9 +291,10 @@ class _HomePageState extends State<HomePage> {
                                               title: Text('Dari Terkecil'),
                                               value: sortAscending,
                                               onChanged: (value) {
-                                                setState(() {
+                                                setStateDialog(() {
                                                   sortAscending = value;
                                                 });
+                                                setState(() {}); // Update "main state"
                                               },
                                             ),
                                           ],

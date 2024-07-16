@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:html' as html;
+// import 'dart:html' as html;
 
 class DioProvider {
   static String api = 'http://127.0.0.1:8000/api';

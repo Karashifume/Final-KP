@@ -58,7 +58,7 @@ class _TanggalWaktuState extends State<TanggalWaktu> {
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
                   child: Center(
                     child: Text(
-                      'Select Consultation Time',
+                      'Pilih Waktu Konsultasi',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
@@ -76,7 +76,7 @@ class _TanggalWaktuState extends State<TanggalWaktu> {
                         horizontal: 10, vertical: 30),
                     alignment: Alignment.center,
                     child: const Text(
-                      'Weekend is not available, please select another date',
+                      'Hari Weekend tidak tersedia, Silahkan Pilih Tanggal Yang Lain',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
