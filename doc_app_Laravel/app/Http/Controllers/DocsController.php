@@ -17,24 +17,11 @@ class DocsController extends Controller
      */
     public function index()
     {
-        //get doctor's appointment, patients and display on dashboard
 
         $doctor = Auth::user();
         $appointments = Appointments::where('doc_id', $doctor->id)->where('status', 'upcoming')->get();
         $reviews = Reviews::where('doc_id', $doctor->id)->where('status', 'active')->get();
-
-        //return all data to dashboard
         return view('dashboard')->with(['doctor'=>$doctor, 'appointments'=>$appointments, 'reviews'=>$reviews]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -45,12 +32,8 @@ class DocsController extends Controller
      */
     public function store(Request $request)
     {
-        //this controller is to store booking details post from mobile app
         $reviews = new Reviews();
-        //this is to update the appointment status from "upcoming" to "complete"
         $appointment = Appointments::where('id', $request->get('appointment_id'))->first();
-
-        //save the ratings and reviews from user
         $reviews->user_id = Auth::user()->id;
         $reviews->doc_id = $request->get('doctor_id');
         $reviews->ratings = $request->get('ratings');
@@ -59,47 +42,13 @@ class DocsController extends Controller
         $reviews->status = 'active';
         $reviews->save();
 
-        //change appointment status
+
         $appointment->status = 'complete';
         $appointment->save();
 
         return response()->json([
             'success'=>'The appointment has been completed and reviewed successfully!',
         ], 200);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     public function updateProfile(Request $request)
@@ -116,16 +65,13 @@ class DocsController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // Update User Profile
+
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('profile-photos', 'public');
             $user->profile_photo_path = $path;
         }
         $user->name = $request->input('name');
         $user->email = $request->input('email');
-        // $user->save();
-
-        // Update Doctor Profile
         $doctor->bio_data = $request->input('bio_data');
         $doctor->experience = $request->input('experience');
         $doctor->category = $request->input('category');
@@ -136,14 +82,4 @@ class DocsController extends Controller
         ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

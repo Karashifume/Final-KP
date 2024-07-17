@@ -17,7 +17,7 @@ class AppointmentsController extends Controller
      */
     public function index()
     {
-        // Retrieve appointments for the current user
+
         $user = Auth::user();
         
         if ($user->type == 'doctor') {
@@ -33,7 +33,7 @@ class AppointmentsController extends Controller
         $doctor = User::where('type', 'doctor')->get();
         $pasien = User::where('type', 'user')->get();
 
-        // Add related details to the appointments
+
         foreach ($appointments as $data) {
             foreach ($doctor as $info) {
                 if ($data['doc_id'] == $info['id']) {
@@ -53,20 +53,12 @@ class AppointmentsController extends Controller
         return response()->json($appointments);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
     public function getDoctorAppointments($doctorId)
 {
     $appointments = Appointments::where('doc_id', $doctorId)->where('status', 'upcoming')->get();
     return response()->json($appointments);
 }
+
 
 
     /**
@@ -99,7 +91,7 @@ class AppointmentsController extends Controller
         $appointment = Appointments::find($id);
         if ($appointment) {
             $appointment->status = $request->get('status');
-            $appointment->alasan = $request->get('alasan'); // Add this line
+            $appointment->alasan = $request->get('alasan'); 
             $appointment->save();
             return response()->json(['success' => 'Appointment status updated successfully!'], 200);
         }
@@ -130,48 +122,4 @@ class AppointmentsController extends Controller
         return response()->json(['error' => 'Appointment not found'], 404);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

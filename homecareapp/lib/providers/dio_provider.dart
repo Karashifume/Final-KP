@@ -213,15 +213,8 @@ class DioProvider {
     }
   }
 
-  Future<dynamic> saveSoap(
-    int appointmentId,
-    String subjective,
-    String objective,
-    String assessment,
-    String planning,
-    String resep,
-    String token,
-  ) async {
+  Future<dynamic> saveSoap(int appointmentId,String subjective,String objective,String assessment,String planning,String resep,String token,) 
+  async {
     try {
       var response = await Dio().post('$api/soap',
           data: {
