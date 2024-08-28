@@ -97,7 +97,7 @@ class _KonsultasiBookingState extends State<KonsultasiBooking> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF69F0AE),
+        backgroundColor: Color.fromRGBO(116, 225, 225, 1),
         title: Text('Konsultasi Booking'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -115,7 +115,7 @@ class _KonsultasiBookingState extends State<KonsultasiBooking> {
               width: double.infinity,
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                border: Border.all(color: Color(0xFF69F0AE)),
+                border: Border.all(color: Color.fromRGBO(116, 225, 225, 1)),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -126,7 +126,7 @@ class _KonsultasiBookingState extends State<KonsultasiBooking> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF69F0AE),
+                      color: Color.fromRGBO(116, 225, 225, 1),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -156,7 +156,7 @@ class _KonsultasiBookingState extends State<KonsultasiBooking> {
                 width: double.infinity,
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xFF69F0AE)),
+                  border: Border.all(color: Color.fromRGBO(116, 225, 225, 1)),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
@@ -195,7 +195,7 @@ class _KonsultasiBookingState extends State<KonsultasiBooking> {
                 width: double.infinity,
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xFF69F0AE)),
+                  border: Border.all(color: Color.fromRGBO(116, 225, 225, 1)),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
@@ -226,7 +226,7 @@ class _KonsultasiBookingState extends State<KonsultasiBooking> {
               width: double.infinity,
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                border: Border.all(color: Color(0xFF69F0AE)),
+                border: Border.all(color: Color.fromRGBO(116, 225, 225, 1)),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -237,7 +237,7 @@ class _KonsultasiBookingState extends State<KonsultasiBooking> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF69F0AE),
+                      color: Color.fromRGBO(116, 225, 225, 1),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -257,7 +257,7 @@ class _KonsultasiBookingState extends State<KonsultasiBooking> {
               width: double.infinity,
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                border: Border.all(color: Color(0xFF69F0AE)),
+                border: Border.all(color: Color.fromRGBO(116, 225, 225, 1)),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -268,7 +268,7 @@ class _KonsultasiBookingState extends State<KonsultasiBooking> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF69F0AE),
+                      color: Color.fromRGBO(116, 225, 225, 1),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -285,7 +285,7 @@ class _KonsultasiBookingState extends State<KonsultasiBooking> {
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF69F0AE),
+                  backgroundColor: Color.fromRGBO(116, 225, 225, 1),
                   padding: EdgeInsets.symmetric(horizontal: 100, vertical: 20),
                 ),
                 onPressed: _bookAppointment,

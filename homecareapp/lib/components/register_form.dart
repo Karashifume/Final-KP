@@ -35,13 +35,13 @@ class _SignUpFormState extends State<SignUpForm> {
           TextFormField(
             controller: _nameController,
             keyboardType: TextInputType.text,
-            cursorColor: Config.primaryColor,
+            cursorColor: const Color.fromRGBO(116, 225, 225, 1),
             decoration: const InputDecoration(
               hintText: 'Username',
               labelText: 'Username',
               alignLabelWithHint: true,
               prefixIcon: Icon(Icons.person_outlined),
-              prefixIconColor: Config.primaryColor,
+              prefixIconColor: Color.fromRGBO(116, 225, 225, 1),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -54,13 +54,13 @@ class _SignUpFormState extends State<SignUpForm> {
           TextFormField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
-            cursorColor: Config.primaryColor,
+            cursorColor: const Color.fromRGBO(116, 225, 225, 1),
             decoration: const InputDecoration(
               hintText: 'Email Address',
               labelText: 'Email',
               alignLabelWithHint: true,
               prefixIcon: Icon(Icons.email_outlined),
-              prefixIconColor: Config.primaryColor,
+              prefixIconColor: Color.fromRGBO(116, 225, 225, 1),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -76,14 +76,14 @@ class _SignUpFormState extends State<SignUpForm> {
           TextFormField(
             controller: _passController,
             keyboardType: TextInputType.visiblePassword,
-            cursorColor: Config.primaryColor,
+            cursorColor: const Color.fromRGBO(116, 225, 225, 1),
             obscureText: obsecurePass,
             decoration: InputDecoration(
               hintText: 'Password',
               labelText: 'Password',
               alignLabelWithHint: true,
               prefixIcon: const Icon(Icons.lock_outline),
-              prefixIconColor: Config.primaryColor,
+              prefixIconColor: const Color.fromRGBO(116, 225, 225, 1),
               suffixIcon: IconButton(
                 onPressed: () {
                   setState(() {
@@ -94,7 +94,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   obsecurePass
                       ? Icons.visibility_off_outlined
                       : Icons.visibility_outlined,
-                  color: obsecurePass ? Colors.black38 : Config.primaryColor,
+                  color: obsecurePass ? Colors.black38 : const Color.fromRGBO(116, 225, 225, 1),
                 ),
               ),
             ),

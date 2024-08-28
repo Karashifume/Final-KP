@@ -52,7 +52,7 @@ class _DoctorListState extends State<DoctorList> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF69F0AE),
+        backgroundColor: Color.fromRGBO(116, 225, 225, 1),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {

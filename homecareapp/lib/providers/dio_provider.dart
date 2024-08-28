@@ -320,7 +320,6 @@ class DioProvider {
     try {
       var response = await Dio().get('$api/pasien/details/$userId',
           options: Options(headers: {'Authorization': 'Bearer $token'}));
-
       return response;
     } catch (error) {
       if (error is DioError) {
