@@ -35,13 +35,13 @@ class _LoginFormState extends State<LoginForm> {
           TextFormField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
-            cursorColor: const Color.fromRGBO(116, 225, 225, 1),
+            cursorColor: Config.primaryColor,
             decoration: const InputDecoration(
               hintText: 'Email Address',
               labelText: 'Email',
               alignLabelWithHint: true,
               prefixIcon: Icon(Icons.email_outlined),
-              prefixIconColor: Color.fromRGBO(116, 225, 225, 1),
+              prefixIconColor: Config.primaryColor,
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -54,14 +54,14 @@ class _LoginFormState extends State<LoginForm> {
           TextFormField(
             controller: _passController,
             keyboardType: TextInputType.visiblePassword,
-            cursorColor: const Color.fromRGBO(116, 225, 225, 1),
+            cursorColor: Config.primaryColor,
             obscureText: obsecurePass,
             decoration: InputDecoration(
               hintText: 'Password',
               labelText: 'Password',
               alignLabelWithHint: true,
               prefixIcon: const Icon(Icons.lock_outline),
-              prefixIconColor: const Color.fromRGBO(116, 225, 225, 1),
+              prefixIconColor: Config.primaryColor,
               suffixIcon: IconButton(
                 onPressed: () {
                   setState(() {
@@ -75,7 +75,7 @@ class _LoginFormState extends State<LoginForm> {
                       )
                     : const Icon(
                         Icons.visibility_outlined,
-                        color: Color.fromRGBO(116, 225, 225, 1),
+                        color: Config.primaryColor,
                       ),
               ),
             ),

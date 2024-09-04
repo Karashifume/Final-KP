@@ -262,7 +262,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                         width: MediaQuery.of(context).size.width / 3,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: const Color.fromRGBO(116, 225, 225, 1),
+                          color: Config.primaryColor,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Center(
@@ -355,7 +355,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                               },
                                               child: const Text(
                                                 'Cancel',
-                                                style: TextStyle(color: Color.fromRGBO(116, 225, 225, 1)),
+                                                style: TextStyle(color: Config.primaryColor),
                                               ),
                                             ),
                                           ),
@@ -363,7 +363,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                           Expanded(
                                             child: OutlinedButton(
                                               style: OutlinedButton.styleFrom(
-                                                backgroundColor: const Color.fromRGBO(116, 225, 225, 1),
+                                                backgroundColor: Config.primaryColor,
                                               ),
                                               onPressed: () async {
                                                 final result = await Navigator.push(
@@ -410,7 +410,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                               },
                                               child: const Text(
                                                 'Lihat Hasil Diagnosa',
-                                                style: TextStyle(color: Color.fromRGBO(116, 225, 225, 1)),
+                                                style: TextStyle(color: Config.primaryColor),
                                               ),
                                             ),
                                           ),
@@ -455,20 +455,20 @@ class ScheduleCard extends StatelessWidget {
         children: <Widget>[
           const Icon(
             Icons.calendar_today,
-            color: Color.fromRGBO(116, 225, 225, 1),
+            color: Config.primaryColor,
             size: 15,
           ),
           const SizedBox(width: 5),
           Text(
             '$day, $date',
             style: const TextStyle(
-              color: Color.fromRGBO(116, 225, 225, 1),
+              color: Config.primaryColor,
             ),
           ),
           const SizedBox(width: 20),
           const Icon(
             Icons.access_alarm,
-            color: Color.fromRGBO(116, 225, 225, 1),
+            color: Config.primaryColor,
             size: 17,
           ),
           const SizedBox(width: 5),
@@ -476,7 +476,7 @@ class ScheduleCard extends StatelessWidget {
             child: Text(
               time,
               style: const TextStyle(
-                color: Color.fromRGBO(116, 225, 225, 1),
+                color: Config.primaryColor,
               ),
             ),
           ),

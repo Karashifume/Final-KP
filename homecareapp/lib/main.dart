@@ -32,17 +32,17 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           inputDecorationTheme: const InputDecorationTheme(
-            focusColor: Color.fromRGBO(116, 225, 225, 1),
+            focusColor: Config.primaryColor,
             border: Config.outlinedBorder,
             focusedBorder: Config.focusBorder,
             errorBorder: Config.errorBorder,
             enabledBorder: Config.outlinedBorder,
-            floatingLabelStyle: TextStyle(color: Color.fromRGBO(116, 225, 225, 1)),
+            floatingLabelStyle: TextStyle(color: Config.primaryColor),
             prefixIconColor: Colors.black38,
           ),
           scaffoldBackgroundColor: Colors.white,
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            backgroundColor: Color.fromRGBO(116, 225, 225, 1),
+            backgroundColor: Config.primaryColor,
             selectedItemColor: Colors.white,
             showSelectedLabels: true,
             showUnselectedLabels: false,

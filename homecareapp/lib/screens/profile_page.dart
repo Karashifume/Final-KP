@@ -17,7 +17,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(116, 225, 225, 1),
+        backgroundColor: Config.primaryColor,
         title: const Text('Profile'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -31,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             Container(
               width: double.infinity,
-              color: const Color.fromRGBO(116, 225, 225, 1),
+              color: Config.primaryColor,
               child: Column(
                 children: const <Widget>[
                   SizedBox(
@@ -125,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 child: const Text(
                                   "Logout",
                                   style: TextStyle(
-                                    color: Color.fromRGBO(116, 225, 225, 1),
+                                    color: Config.primaryColor,
                                     fontSize: 15,
                                   ),
                                 ),

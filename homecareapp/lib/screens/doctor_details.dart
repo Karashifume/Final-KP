@@ -28,7 +28,7 @@ class _DoctorDetailsState extends State<DoctorDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Bio Data Doctor'),
-        backgroundColor: Color.fromRGBO(116, 225, 225, 1),
+        backgroundColor: Config.primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {

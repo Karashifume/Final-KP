@@ -40,7 +40,7 @@ class _TanggalWaktuState extends State<TanggalWaktu> {
     Config().init(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(116, 225, 225, 1),
+        backgroundColor: Config.primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {

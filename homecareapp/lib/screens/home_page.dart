@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.all(20),
                           width: MediaQuery.of(context).size.width * 0.8,
                           decoration: BoxDecoration(
-                            border: Border.all(color: Color.fromRGBO(116, 225, 225, 1)),
+                            border: Border.all(color: Config.primaryColor),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Column(
@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                                 style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
-                                  color: Color.fromRGBO(116, 225, 225, 1),
+                                  color: Config.primaryColor,
                                 ),
                               ),
                               SizedBox(height: 20),
@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: _isKtpVerified
-                                      ? Color.fromRGBO(116, 225, 225, 1)
+                                      ? Config.primaryColor
                                       : Colors.red,
                                 ),
                               ),
@@ -154,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 child: CircleAvatar(
                                   radius: 30,
-                                  backgroundColor: Color.fromRGBO(116, 225, 225, 1),
+                                  backgroundColor: Config.primaryColor,
                                   child: Icon(
                                     Icons.photo_library,
                                     color: Colors.white,
@@ -181,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                                 child: CircleAvatar(
                                   radius: 30,
                                   backgroundColor: _isKtpVerified
-                                      ? Color.fromRGBO(116, 225, 225, 1)
+                                      ? Config.primaryColor
                                       : Colors.grey,
                                   child: Icon(
                                     Icons.local_hospital,
